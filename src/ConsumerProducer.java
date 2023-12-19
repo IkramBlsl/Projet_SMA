@@ -3,7 +3,7 @@ import jade.core.Agent;
 public class ConsumerProducer extends Agent {
 
     private Merchandise consumedMerchandise;
-    private Merchandise productMerchandise;
+    private Merchandise producedMerchandise;
 
     private float money = 0;
     private float satisfaction = 1;
@@ -17,7 +17,10 @@ public class ConsumerProducer extends Agent {
         Object[] args = getArguments();
         try {
             Merchandise consumedMerchandise = Merchandise.parseMerchandise(args[0].toString());
-            Merchandise productMerchandise = Merchandise.parseMerchandise(args[1].toString());
+            Merchandise producedMerchandise = Merchandise.parseMerchandise(args[1].toString());
+
+            this.consumedMerchandise = consumedMerchandise;
+            this.producedMerchandise = producedMerchandise;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Terminating agent due to exception.");
@@ -25,6 +28,9 @@ public class ConsumerProducer extends Agent {
             // TODO : Dealing better with this catch block
             return;
         }
+
+        System.out.println("Consumed Merchandise is " + consumedMerchandise.getValue());
+        System.out.println("Produced Merchandise is " + producedMerchandise.getValue());
     }
 
     private void cloneAgent() {}
