@@ -5,9 +5,12 @@ public class ConsumerProducer extends Agent {
     private Merchandise consumedMerchandise;
     private Merchandise producedMerchandise;
 
+    private float priceProducedMerchandise = 1;
+    private int stockProducedMerchandise = 0;
+
+    private int stockConsumedMerchandise = 0;
     private float money = 0;
     private float satisfaction = 1;
-    private float priceProductMerchandise = 1;
 
     protected void setup() {
         System.out.println("Hello World (not new!...)!");
