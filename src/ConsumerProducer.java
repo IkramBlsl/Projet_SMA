@@ -7,9 +7,10 @@ public class ConsumerProducer extends Agent {
 
     private float priceProducedMerchandise = 1;
     private int stockProducedMerchandise = 0;
+    private int maxStockProducedMerchandise;
 
     private int stockConsumedMerchandise = 0;
-    private float money = 0;
+    private float money = 10;
     private float satisfaction = 1;
 
     protected void setup() {
