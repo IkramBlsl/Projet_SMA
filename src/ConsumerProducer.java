@@ -32,8 +32,8 @@ public class ConsumerProducer extends Agent {
             return;
         }
 
-        System.out.println("Consumed Merchandise is " + consumedMerchandise.getValue());
-        System.out.println("Produced Merchandise is " + producedMerchandise.getValue());
+        System.out.println("Consumed Merchandise is " + consumedMerchandise);
+        System.out.println("Produced Merchandise is " + producedMerchandise);
     }
 
     private void cloneAgent() {}
