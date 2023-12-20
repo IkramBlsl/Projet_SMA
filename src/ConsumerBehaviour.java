@@ -16,7 +16,7 @@ public class ConsumerBehaviour extends CyclicBehaviour {
 
             // Consuming merchandise
             System.out.println("Consuming " + consumerProducerAgent.getConsumedMerchandise());
-            consumerProducerAgent.removeConsumedMerchandise();
+            consumerProducerAgent.removeOneConsumedMerchandise();
 
             // Afficher les informations ou exécuter d'autres actions nécessaires
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());

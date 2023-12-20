@@ -15,7 +15,7 @@ public class ProducerBehaviour extends CyclicBehaviour {
 
             // Produce merchandise
             System.out.println("Producing new " + consumerProducerAgent.getProducedMerchandise());
-            consumerProducerAgent.addProducedMerchandise();
+            consumerProducerAgent.addOneProducedMerchandise();
         } else {
             // Optional: Handle the case where there is no space in the produced stock
             System.out.println("No space in produced stock.");
