@@ -9,6 +9,7 @@ public class ConsumerProducerAgent extends Agent {
     private int stockProducedMerchandise = 0;
     private int maxStockProducedMerchandise = 500; // TODO
 
+    public float consumptionSpeed;
     private float productionSpeed;
 
     private int stockConsumedMerchandise = 0;
@@ -16,8 +17,9 @@ public class ConsumerProducerAgent extends Agent {
     private float satisfaction = 1;
 
     protected void setup() {
-        // TODO : Handle production speed
+        // TODO : Handle production & consumption speed
         productionSpeed = 3;
+        consumptionSpeed = 3;
 
         System.out.println("Hello World (not new!...)!");
         System.out.println("My name is " + getAID().getName());
@@ -38,11 +40,13 @@ public class ConsumerProducerAgent extends Agent {
             return;
         }
 
-        // Ajout du comportement du consommateur
-        addBehaviour(new ConsumerBehaviour(this, stockConsumedMerchandise));
         System.out.println("Consumed Merchandise is " + consumedMerchandise);
         System.out.println("Produced Merchandise is " + producedMerchandise);
 
+        // Consumer Behaviour
+        addBehaviour(new ConsumerBehaviour(this));
+
+        // Producer Behaviour
         addBehaviour(new ProducerBehaviour(this));
     }
 
@@ -52,8 +56,20 @@ public class ConsumerProducerAgent extends Agent {
         return stockProducedMerchandise < maxStockProducedMerchandise;
     }
 
+    public boolean isStockOfConsumedMerchandise() {
+        return stockConsumedMerchandise > 0;
+    }
+
     public void addProducedMerchandise() {
         stockProducedMerchandise++;
+    }
+
+    public void removeConsumedMerchandise() {
+        if (stockConsumedMerchandise > 0) {
+            stockConsumedMerchandise--;
+        } else {
+            throw new RuntimeException("No Consumed Merchandise left.");
+        }
     }
 
     public Merchandise getConsumedMerchandise() {
@@ -66,6 +82,14 @@ public class ConsumerProducerAgent extends Agent {
 
     public float getProductionSpeed() {
         return productionSpeed;
+    }
+
+    public float getConsumptionSpeed() {
+        return consumptionSpeed;
+    }
+
+    public float getSatisfaction() {
+        return satisfaction;
     }
 
 }
