@@ -12,6 +12,8 @@ public class ConsumerBehaviour extends CyclicBehaviour {
 
         // Simulation de la consommation
         if (consumerProducerAgent.isStockOfConsumedMerchandise()) {
+            block((long) (consumerProducerAgent.getConsumptionSpeed() * 1000));
+
             // Consuming merchandise
             System.out.println("Consuming " + consumerProducerAgent.getConsumedMerchandise());
             consumerProducerAgent.removeConsumedMerchandise();
