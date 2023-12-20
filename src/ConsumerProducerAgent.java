@@ -1,4 +1,9 @@
+import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 
 public class ConsumerProducerAgent extends Agent {
 
@@ -33,8 +38,8 @@ public class ConsumerProducerAgent extends Agent {
             this.consumedMerchandise = consumedMerchandise;
             this.producedMerchandise = producedMerchandise;
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("Terminating agent due to exception.");
+            System.err.println(e.getMessage());
             doDelete(); // Terminate the agent.
             // TODO : Dealing better with this catch block
             return;
@@ -43,11 +48,53 @@ public class ConsumerProducerAgent extends Agent {
         System.out.println("Consumed Merchandise is " + consumedMerchandise);
         System.out.println("Produced Merchandise is " + producedMerchandise);
 
+        // Register Agent to DF
+        registerToDF();
+
         // Consumer Behaviour
         addBehaviour(new ConsumerBehaviour(this));
 
         // Producer Behaviour
         addBehaviour(new ProducerBehaviour(this));
+    }
+
+    @Override
+    protected void takeDown() {
+        try {
+            DFService.deregister(this);
+        } catch (FIPAException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void registerToDF() {
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName(getAID());
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType(producedMerchandise.getValue());
+        dfd.addServices(sd);
+        try {
+            DFService.register(this, dfd);
+        } catch (FIPAException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private AID[] searchProducerInDF() {
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType(consumedMerchandise.getValue());
+        template.addServices(sd);
+        try {
+            DFAgentDescription[] results = DFService.search(this, template);
+            AID[] agents = new AID[results.length];
+            for (int i = 0; i < results.length; i++) {
+                agents[i] = results[i].getName();
+            }
+            return agents;
+        } catch (FIPAException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void cloneAgent() {}
@@ -60,7 +107,7 @@ public class ConsumerProducerAgent extends Agent {
         return stockConsumedMerchandise > 0;
     }
 
-    public void addProducedMerchandise() {
+    public void addOneProducedMerchandise() {
         if (stockProducedMerchandise < maxStockProducedMerchandise) {
             stockProducedMerchandise++;
         } else {
@@ -68,7 +115,7 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
-    public void removeConsumedMerchandise() {
+    public void removeOneConsumedMerchandise() {
         if (stockConsumedMerchandise > 0) {
             stockConsumedMerchandise--;
         } else {
