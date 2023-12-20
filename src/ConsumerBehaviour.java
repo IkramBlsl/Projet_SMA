@@ -21,7 +21,8 @@ public class ConsumerBehaviour extends CyclicBehaviour {
         } else {
             // Si le stock est trop faible pour consommer, agir en conséquence
             // décider d'acheter auprès d'un producteur
-            consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent, 4000)); // TODO : Change this timeout
+            consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent, (long) (consumerProducerAgent.getConsumptionSpeed() * 1000)));
+            block();
             // TODO Descendre la satisfaction de l'agent
         }
     }
