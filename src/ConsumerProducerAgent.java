@@ -81,7 +81,7 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
-    private AID[] searchProducerInDF() {
+    private AID[] searchConsumedMerchandiseProducersInDF() {
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
         sd.setType(consumedMerchandise.getValue());
@@ -100,8 +100,8 @@ public class ConsumerProducerAgent extends Agent {
 
     private void cloneAgent() {}
 
-    public void sendMessageToProducers() {
-        AID[] agents = searchProducerInDF();
+    public void sendCFPToConsumedMerchandiseProducers() {
+        AID[] agents = searchConsumedMerchandiseProducersInDF();
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         for (AID agent : agents) {
             msg.addReceiver(agent);
