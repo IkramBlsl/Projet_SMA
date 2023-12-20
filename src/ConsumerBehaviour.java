@@ -1,4 +1,6 @@
+import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.lang.acl.ACLMessage;
 
 public class ConsumerBehaviour extends CyclicBehaviour {
 
@@ -10,7 +12,6 @@ public class ConsumerBehaviour extends CyclicBehaviour {
     public void action() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
-        // Simulation de la consommation
         if (consumerProducerAgent.isStockOfConsumedMerchandise()) {
             block((long) (consumerProducerAgent.getConsumptionSpeed() * 1000));
 
@@ -18,11 +19,12 @@ public class ConsumerBehaviour extends CyclicBehaviour {
             System.out.println("Consuming " + consumerProducerAgent.getConsumedMerchandise());
             consumerProducerAgent.removeOneConsumedMerchandise();
 
-            // Afficher les informations ou exécuter d'autres actions nécessaires
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());
         } else {
             // Si le stock est trop faible pour consommer, agir en conséquence
-            // décider d'acheter auprès d'un producteur s'il y a de l'argent disponible
+            // décider d'acheter auprès d'un producteur
+            consumerProducerAgent.sendMessageToProducers();
+            // TODO Descendre la satisfaction de l'agent
         }
     }
 

@@ -4,6 +4,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 
 public class ConsumerProducerAgent extends Agent {
 
@@ -98,6 +99,16 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     private void cloneAgent() {}
+
+    public void sendMessageToProducers() {
+        AID[] agents = searchProducerInDF();
+        ACLMessage msg = new ACLMessage(ACLMessage.CFP);
+        for (AID agent : agents) {
+            msg.addReceiver(agent);
+        }
+        msg.setContent(consumedMerchandise.getValue());
+        send(msg);
+    }
 
     public boolean isSpaceInProducedStock() {
         return stockProducedMerchandise < maxStockProducedMerchandise;
