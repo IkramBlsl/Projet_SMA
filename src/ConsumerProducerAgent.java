@@ -61,7 +61,11 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public void addProducedMerchandise() {
-        stockProducedMerchandise++;
+        if (stockProducedMerchandise < maxStockProducedMerchandise) {
+            stockProducedMerchandise++;
+        } else {
+            throw new RuntimeException("No Space left in Produced Merchandise stock.");
+        }
     }
 
     public void removeConsumedMerchandise() {
