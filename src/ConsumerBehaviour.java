@@ -1,21 +1,20 @@
-import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 
-public class ConsumBehaviour extends Behaviour {
+public class ConsumerBehaviour extends Behaviour {
 
-    private ConsumerProducer agent;
     private int stockConsumedMerchandise; // Stock initial de la marchandise consommée
     private int quantiteNecessairePourConsommer; // Quantité minimale pour consommer
 
-    public ConsumBehaviour(ConsumerProducer agent, int initialStock, int minQuantityToConsume) {
+    public ConsumerBehaviour(ConsumerProducerAgent agent, int initialStock, int minQuantityToConsume) {
         super(agent);
-        this.agent = agent;
         this.stockConsumedMerchandise = initialStock;
         this.quantiteNecessairePourConsommer = minQuantityToConsume;
     }
 
     @Override
     public void action() {
+        ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
+
         // Simulation de la consommation
         if (stockConsumedMerchandise >= quantiteNecessairePourConsommer) {
             // Consommer la marchandise et mettre à jour le stock
@@ -27,7 +26,7 @@ public class ConsumBehaviour extends Behaviour {
             // Mettre à jour d'autres paramètres de l'agent en fonction de la satisfaction, etc.
 
             // Afficher les informations ou exécuter d'autres actions nécessaires
-            System.out.println("Agent " + agent.getLocalName() + " a consommé. Satisfaction : " + satisfaction);
+            System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé. Satisfaction : " + satisfaction);
         } else {
             // Si le stock est trop faible pour consommer, agir en conséquence
             // décider d'acheter auprès d'un producteur s'il y a de l'argent disponible

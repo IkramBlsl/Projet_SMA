@@ -1,6 +1,6 @@
 import jade.core.Agent;
 
-public class ConsumerProducer extends Agent {
+public class ConsumerProducerAgent extends Agent {
 
     private Merchandise consumedMerchandise;
     private Merchandise producedMerchandise;
@@ -39,7 +39,7 @@ public class ConsumerProducer extends Agent {
         }
 
         // Ajout du comportement du consommateur
-        addBehaviour(new ConsumBehaviour(this, stockConsumedMerchandise,10));
+        addBehaviour(new ConsumerBehaviour(this, stockConsumedMerchandise,10));
         System.out.println("Consumed Merchandise is " + consumedMerchandise);
         System.out.println("Produced Merchandise is " + producedMerchandise);
 

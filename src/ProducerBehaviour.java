@@ -1,15 +1,14 @@
-import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 
 public class ProducerBehaviour extends CyclicBehaviour {
 
-    public ProducerBehaviour(ConsumerProducer a) {
+    public ProducerBehaviour(ConsumerProducerAgent a) {
         super(a);
     }
 
     @Override
     public void action() {
-        ConsumerProducer consumerProducerAgent = (ConsumerProducer) myAgent;
+        ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
         if (consumerProducerAgent.isSpaceInProducedStock()) {
             block((long) (consumerProducerAgent.getProductionSpeed() * 1000));
