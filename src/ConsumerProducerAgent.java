@@ -39,7 +39,7 @@ public class ConsumerProducerAgent extends Agent {
         }
 
         // Ajout du comportement du consommateur
-        addBehaviour(new ConsumerBehaviour(this, stockConsumedMerchandise,10));
+        addBehaviour(new ConsumerBehaviour(this, stockConsumedMerchandise));
         System.out.println("Consumed Merchandise is " + consumedMerchandise);
         System.out.println("Produced Merchandise is " + producedMerchandise);
 
