@@ -73,6 +73,7 @@ public class ConsumerProducerAgent extends Agent {
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
         sd.setType(producedMerchandise.getValue());
+        sd.setName(getName());
         dfd.addServices(sd);
         try {
             DFService.register(this, dfd);
@@ -110,6 +111,19 @@ public class ConsumerProducerAgent extends Agent {
         send(msg);
     }
 
+    public void sendREJECTToConsumedMerchandiseProducer(AID agent) {
+        ACLMessage msg = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+        msg.addReceiver(agent);
+        send(msg);
+    }
+
+    public void sendACCEPTToConsumedMerchandiseProducer(AID agent, int quantity) {
+        ACLMessage msg = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+        msg.addReceiver(agent);
+        msg.setContent(String.valueOf(quantity));
+        send(msg);
+    }
+
     public boolean isSpaceInProducedStock() {
         return stockProducedMerchandise < maxStockProducedMerchandise;
     }
@@ -131,6 +145,15 @@ public class ConsumerProducerAgent extends Agent {
             stockConsumedMerchandise--;
         } else {
             throw new RuntimeException("No Consumed Merchandise left.");
+        }
+    }
+
+    public void buyConsumedMerchandises(int quantity, float price) {
+        if ((quantity * price) <= money) {
+            stockConsumedMerchandise += quantity;
+            money -= (quantity * price);
+        } else {
+            throw new RuntimeException("No Space left in Produced Merchandise stock.");
         }
     }
 
@@ -171,5 +194,9 @@ public class ConsumerProducerAgent extends Agent {
     }
 
 
+
+    public float getMoney() {
+        return money;
+    }
 
 }
