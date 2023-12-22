@@ -22,6 +22,7 @@ public class ConsumerBehaviour extends CyclicBehaviour {
             // Si le stock est trop faible pour consommer, agir en conséquence
             // décider d'acheter auprès d'un producteur
             consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent, (long) (consumerProducerAgent.getConsumptionSpeed() * 1000)));
+            consumerProducerAgent.decreaseSatisfaction(0.1f); // Réduire la satisfaction ( de 0.1 à changer )
             block();
             // TODO Descendre la satisfaction de l'agent
         }

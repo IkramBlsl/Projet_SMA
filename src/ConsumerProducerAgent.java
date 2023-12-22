@@ -153,5 +153,23 @@ public class ConsumerProducerAgent extends Agent {
     public float getSatisfaction() {
         return satisfaction;
     }
+    public void decreaseSatisfaction(float decreaseAmount) {
+        satisfaction -= decreaseAmount;
+        if (satisfaction < 0) {
+            satisfaction = 0; // la satisfaction ne descend pas en dessous de zéro
+        }
+    }
+
+    public void setSatisfaction(float newSatisfaction) {
+        if (newSatisfaction > 1.0f) {
+            satisfaction = 1.0f; // Limiter la satisfaction à 1 (100%)
+        } else if (newSatisfaction < 0.0f) {
+            satisfaction = 0.0f; // Assurer que la satisfaction ne descend pas en dessous de 0
+        } else {
+            satisfaction = newSatisfaction; // Définir la satisfaction à la valeur spécifiée
+        }
+    }
+
+
 
 }

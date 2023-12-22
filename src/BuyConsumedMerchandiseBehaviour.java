@@ -5,10 +5,12 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
     private long startTime;
     private final long timeout;  // Timeout in milliseconds
+    private ConsumerProducerAgent ConsumerProducerAgent; //
 
     public BuyConsumedMerchandiseBehaviour(ConsumerProducerAgent a, long timeout) {
         super(a);
         this.timeout = timeout;
+        this.ConsumerProducerAgent = a;
     }
 
     @Override
@@ -34,6 +36,8 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
     public boolean done() {
         if (System.currentTimeMillis() - startTime >= timeout) {
             // TODO : Accept the best proposal among all of the received proposals from the producers
+
+            ConsumerProducerAgent.setSatisfaction(1.0f); // Définir la satisfaction à 1.0 directement
             return true;
         }
         return false;
