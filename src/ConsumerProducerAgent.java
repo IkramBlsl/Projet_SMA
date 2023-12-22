@@ -110,6 +110,19 @@ public class ConsumerProducerAgent extends Agent {
         send(msg);
     }
 
+    public void sendREJECTToConsumedMerchandiseProducer(AID agent) {
+        ACLMessage msg = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+        msg.addReceiver(agent);
+        send(msg);
+    }
+
+    public void sendACCEPTToConsumedMerchandiseProducer(AID agent, int quantity) {
+        ACLMessage msg = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+        msg.addReceiver(agent);
+        msg.setContent(String.valueOf(quantity));
+        send(msg);
+    }
+
     public boolean isSpaceInProducedStock() {
         return stockProducedMerchandise < maxStockProducedMerchandise;
     }
@@ -152,6 +165,10 @@ public class ConsumerProducerAgent extends Agent {
 
     public float getSatisfaction() {
         return satisfaction;
+    }
+
+    public float getMoney() {
+        return money;
     }
 
 }
