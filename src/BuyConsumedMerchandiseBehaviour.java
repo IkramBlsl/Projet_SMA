@@ -85,6 +85,11 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                     consumerProducerAgent.sendREJECTToConsumedMerchandiseProducer(bestProposition.getSender());
                 } else {
                     consumerProducerAgent.sendACCEPTToConsumedMerchandiseProducer(bestProposition.getSender(), buyQuantity);
+                    block();
+                    ACLMessage msg = consumerProducerAgent.receive();
+                    if (msg != null && msg.getPerformative() == ACLMessage.CONFIRM) {
+                        consumerProducerAgent.buyConsumedMerchandises(buyQuantity, bestProposition.getPrice());
+                    }
                 }
             } catch (NoSuchElementException e) {
                 // TODO : Deal with this exception

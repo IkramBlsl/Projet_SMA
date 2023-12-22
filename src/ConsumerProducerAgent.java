@@ -147,6 +147,15 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
+    public void buyConsumedMerchandises(int quantity, float price) {
+        if ((quantity * price) <= money) {
+            stockConsumedMerchandise += quantity;
+            money -= (quantity * price);
+        } else {
+            throw new RuntimeException("No Space left in Produced Merchandise stock.");
+        }
+    }
+
     public Merchandise getConsumedMerchandise() {
         return consumedMerchandise;
     }
