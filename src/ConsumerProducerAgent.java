@@ -6,6 +6,11 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 
+/**
+ * Agent class responsible for managing the consumption and production of merchandise.
+ * Manages the stock, satisfaction level, and communication with other agents for trading.
+ */
+
 public class ConsumerProducerAgent extends Agent {
 
     private Merchandise consumedMerchandise;
@@ -67,6 +72,10 @@ public class ConsumerProducerAgent extends Agent {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Method to register the agent to the Directory Facilitator (DF).
+     */
 
     private void registerToDF() {
         DFAgentDescription dfd = new DFAgentDescription();

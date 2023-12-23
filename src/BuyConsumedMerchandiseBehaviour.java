@@ -5,6 +5,12 @@ import jade.lang.acl.ACLMessage;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
+
+/**
+ * Class representing the behavior for purchasing consumed merchandise from producers.
+ * Compares producers' propositions and accepts the best offer for purchase.
+ */
+
 public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
     private long startTime;
@@ -12,11 +18,22 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
     private final ArrayList<Proposition> propositions;
 
+    /**
+     * Constructor for BuyConsumedMerchandiseBehaviour class.
+     * @param a Consumer-producer agent
+     * @param timeout Timeout duration before the behavior finishes
+     */
+
     public BuyConsumedMerchandiseBehaviour(ConsumerProducerAgent a, long timeout) {
         super(a);
         this.timeout = timeout;
         this.propositions = new ArrayList<>();
     }
+
+    /**
+     * Method executed at the beginning of the behavior.
+     * Sends a call for proposals to all producers of the consumed merchandise.
+     */
 
     @Override
     public void onStart() {
@@ -26,6 +43,11 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
         consumerProducerAgent.sendCFPToConsumedMerchandiseProducers();
         startTime = System.currentTimeMillis();
     }
+
+    /**
+     * Action method: processes received messages from producers.
+     * If a proposal message is received, it is parsed and added to the propositions list.
+     */
 
     @Override
     public void action() {
@@ -50,6 +72,12 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
             }
         }
     }
+
+    /**
+     * Checks if the behavior is done.
+     * If the timeout is reached, compares received propositions and proceeds with the purchase.
+     * @return True if the behavior is finished, otherwise false
+     */
 
     @Override
     public boolean done() {

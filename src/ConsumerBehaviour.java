@@ -1,10 +1,27 @@
 import jade.core.behaviours.CyclicBehaviour;
 
+/**
+ * Behavior class for the Consumer agent.
+ * This behavior is cyclic, continuously checking the stock of the consumed merchandise.
+ * If there's enough stock, it consumes the merchandise, updating the agent's satisfaction.
+ * If not, it decides to purchase from a producer, reducing the agent's satisfaction.
+ */
+
+
 public class ConsumerBehaviour extends CyclicBehaviour {
 
+    /**
+     * Constructor for the ConsumerBehaviour class.
+     *
+     * @param a The instance of the ConsumerProducerAgent.
+     */
     public ConsumerBehaviour(ConsumerProducerAgent a) {
         super(a);
     }
+    /**
+     * Action method of the behavior.
+     * Checks the stock of the consumed merchandise and performs actions accordingly.
+     */
 
     @Override
     public void action() {
