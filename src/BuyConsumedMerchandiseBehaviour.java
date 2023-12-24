@@ -1,6 +1,7 @@
 import jade.core.AID;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -50,8 +51,8 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
     public void action() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
-        ACLMessage msg = consumerProducerAgent.receive();
-        if (msg != null && msg.getPerformative() == ACLMessage.PROPOSE) {
+        ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
+        if (msg != null) {
             AID msgSender = msg.getSender();
             String msgContent = msg.getContent();
             String[] propositionArgs = msgContent.split(" ");
@@ -110,8 +111,8 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                 } else {
                     consumerProducerAgent.sendACCEPTToConsumedMerchandiseProducer(bestProposition.getSender(), buyQuantity);
                     block();
-                    ACLMessage msg = consumerProducerAgent.receive();
-                    if (msg != null && msg.getPerformative() == ACLMessage.CONFIRM) {
+                    ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM));
+                    if (msg != null) {
                         consumerProducerAgent.buyConsumedMerchandises(buyQuantity, bestProposition.getPrice());
                     }
                 }

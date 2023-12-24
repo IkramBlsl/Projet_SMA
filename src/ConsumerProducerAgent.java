@@ -31,10 +31,6 @@ public class ConsumerProducerAgent extends Agent {
         productionSpeed = 3000;
         consumptionSpeed = 3000;
 
-        System.out.println("Hello World (not new!...)!");
-        System.out.println("My name is " + getAID().getName());
-        System.out.println("My local name is " + getLocalName());
-
         Object[] args = getArguments();
         try {
             Merchandise consumedMerchandise = Merchandise.parseMerchandise(args[0].toString());
@@ -50,9 +46,6 @@ public class ConsumerProducerAgent extends Agent {
             return;
         }
 
-        System.out.println("Consumed Merchandise is " + consumedMerchandise);
-        System.out.println("Produced Merchandise is " + producedMerchandise);
-
         // Register Agent to DF
         registerToDF();
 
@@ -61,6 +54,9 @@ public class ConsumerProducerAgent extends Agent {
 
         // Producer Behaviour
         addBehaviour(new ProducerBehaviour(this));
+
+        // Selling Behaviour
+        addBehaviour(new SellProducedMerchandiseBehaviour(this));
     }
 
     @Override
@@ -165,6 +161,15 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
+    public void sellProducedMerchandises(int quantity) {
+        if (quantity < stockProducedMerchandise) {
+            stockProducedMerchandise -= quantity;
+            money += (quantity * priceProducedMerchandise);
+        } else {
+            throw new RuntimeException("No Space left in Produced Merchandise stock.");
+        }
+    }
+
     public Merchandise getConsumedMerchandise() {
         return consumedMerchandise;
     }
@@ -204,6 +209,14 @@ public class ConsumerProducerAgent extends Agent {
 
     public float getMoney() {
         return money;
+    }
+
+    public float getPriceProducedMerchandise() {
+        return priceProducedMerchandise;
+    }
+
+    public int getStockProducedMerchandise() {
+        return stockProducedMerchandise;
     }
 
 }
