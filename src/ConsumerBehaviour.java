@@ -35,7 +35,7 @@ public class ConsumerBehaviour extends TickerBehaviour {
         } else {
             // Si le stock est trop faible pour consommer, agir en conséquence
             // décider d'acheter auprès d'un producteur
-            consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent, consumerProducerAgent.getConsumptionSpeed()));
+            consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent, consumerProducerAgent.getConsumptionSpeed() - 500));
             consumerProducerAgent.decreaseSatisfaction(0.1f); // Réduire la satisfaction ( de 0.1 à changer )
         }
     }
