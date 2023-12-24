@@ -110,8 +110,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                     consumerProducerAgent.sendREJECTToConsumedMerchandiseProducer(bestProposition.getSender());
                 } else {
                     consumerProducerAgent.sendACCEPTToConsumedMerchandiseProducer(bestProposition.getSender(), buyQuantity);
-                    block();
-                    ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM));
+                    ACLMessage msg = consumerProducerAgent.blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), consumerProducerAgent.getConsumptionSpeed());
                     if (msg != null) {
                         consumerProducerAgent.buyConsumedMerchandises(buyQuantity, bestProposition.getPrice());
                     }
