@@ -11,6 +11,7 @@ public enum Merchandise {
     Merchandise(String value) {
         this.value = value;
     }
+
     /**
      * Retrieves the value of the merchandise.
      * @return The value associated with the merchandise
@@ -25,7 +26,6 @@ public enum Merchandise {
      * @return The corresponding Merchandise enum value
      * @throws IllegalArgumentException if no matching enum constant is found for the property value
      */
-
     public static Merchandise parseMerchandise(String propertyValue) {
         for (Merchandise enumValue : Merchandise.values()) {
             if (enumValue.getValue().equals(propertyValue)) {

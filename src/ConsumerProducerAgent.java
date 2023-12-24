@@ -10,7 +10,6 @@ import jade.lang.acl.ACLMessage;
  * Agent class responsible for managing the consumption and production of merchandise.
  * Manages the stock, satisfaction level, and communication with other agents for trading.
  */
-
 public class ConsumerProducerAgent extends Agent {
 
     private Merchandise consumedMerchandise;
@@ -20,8 +19,8 @@ public class ConsumerProducerAgent extends Agent {
     private int stockProducedMerchandise = 0;
     private int maxStockProducedMerchandise = 500; // TODO
 
-    public float consumptionSpeed;
-    private float productionSpeed;
+    private long consumptionSpeed;
+    private long productionSpeed;
 
     private int stockConsumedMerchandise = 0;
     private float money = 10;
@@ -29,8 +28,8 @@ public class ConsumerProducerAgent extends Agent {
 
     protected void setup() {
         // TODO : Handle production & consumption speed
-        productionSpeed = 3;
-        consumptionSpeed = 3;
+        productionSpeed = 3000;
+        consumptionSpeed = 3000;
 
         System.out.println("Hello World (not new!...)!");
         System.out.println("My name is " + getAID().getName());
@@ -174,17 +173,18 @@ public class ConsumerProducerAgent extends Agent {
         return producedMerchandise;
     }
 
-    public float getProductionSpeed() {
+    public long getProductionSpeed() {
         return productionSpeed;
     }
 
-    public float getConsumptionSpeed() {
+    public long getConsumptionSpeed() {
         return consumptionSpeed;
     }
 
     public float getSatisfaction() {
         return satisfaction;
     }
+
     public void decreaseSatisfaction(float decreaseAmount) {
         satisfaction -= decreaseAmount;
         if (satisfaction < 0) {
@@ -201,8 +201,6 @@ public class ConsumerProducerAgent extends Agent {
             satisfaction = newSatisfaction; // Définir la satisfaction à la valeur spécifiée
         }
     }
-
-
 
     public float getMoney() {
         return money;

@@ -23,7 +23,6 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
      * @param a Consumer-producer agent
      * @param timeout Timeout duration before the behavior finishes
      */
-
     public BuyConsumedMerchandiseBehaviour(ConsumerProducerAgent a, long timeout) {
         super(a);
         this.timeout = timeout;
@@ -34,7 +33,6 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
      * Method executed at the beginning of the behavior.
      * Sends a call for proposals to all producers of the consumed merchandise.
      */
-
     @Override
     public void onStart() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
@@ -48,7 +46,6 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
      * Action method: processes received messages from producers.
      * If a proposal message is received, it is parsed and added to the propositions list.
      */
-
     @Override
     public void action() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
@@ -78,7 +75,6 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
      * If the timeout is reached, compares received propositions and proceeds with the purchase.
      * @return True if the behavior is finished, otherwise false
      */
-
     @Override
     public boolean done() {
         if (System.currentTimeMillis() - startTime >= timeout) {

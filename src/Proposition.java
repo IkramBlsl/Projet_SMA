@@ -4,8 +4,6 @@ import jade.core.AID;
  * Represents a proposition for selling merchandise by a producer.
  * Contains information such as the sender, the merchandise, quantity, and price.
  */
-
-
 public class Proposition {
 
     private AID sender;
@@ -32,7 +30,6 @@ public class Proposition {
      * Retrieves the merchandise of the proposition.
      * @return The merchandise offered in the proposition
      */
-
     public Merchandise getProduct() {
         return product;
     }
