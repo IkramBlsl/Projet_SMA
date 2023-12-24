@@ -27,7 +27,6 @@ public class ConsumerBehaviour extends TickerBehaviour {
 
         if (consumerProducerAgent.isStockOfConsumedMerchandise()) {
             // Consuming merchandise
-            System.out.println("Consuming " + consumerProducerAgent.getConsumedMerchandise());
             consumerProducerAgent.removeOneConsumedMerchandise();
 
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());

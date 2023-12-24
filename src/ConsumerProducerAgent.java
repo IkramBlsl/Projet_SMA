@@ -23,7 +23,7 @@ public class ConsumerProducerAgent extends Agent {
     private long productionSpeed;
 
     private int stockConsumedMerchandise = 0;
-    private float money = 10;
+    private float money = 100;
     private float satisfaction = 1;
 
     protected void setup() {
