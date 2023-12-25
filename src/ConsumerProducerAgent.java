@@ -149,6 +149,7 @@ public class ConsumerProducerAgent extends Agent {
         float meanSatisfaction = (globalSatisfaction / nbUpdatedGlobalSatisfaction) * 100;
         System.out.println("Agent " + getLocalName() + " mean satisfaction is " + decimalFormat.format(meanSatisfaction) + "%");
     }
+
     /**
      * Checks if the agent is currently satisfied based on its financial status and satisfaction level.
      *
@@ -158,6 +159,7 @@ public class ConsumerProducerAgent extends Agent {
     public boolean isSatisfied() {
         return (money > SimulationParameters.CPA_MONEY_SATISFACTION && satisfaction > 0.5);
     }
+
     /**
      * Clones the current agent.
      */
@@ -171,6 +173,7 @@ public class ConsumerProducerAgent extends Agent {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * Sends Call for Proposal (CFP) messages to producers of the consumed product
      * registered in the DF.
@@ -188,6 +191,7 @@ public class ConsumerProducerAgent extends Agent {
 
         return agents.length;
     }
+
     /**
      * Sends a rejection message to a specific producer agent when he finds a cheaper product elsewhere.
      *
@@ -198,6 +202,7 @@ public class ConsumerProducerAgent extends Agent {
         msg.addReceiver(agent);
         send(msg);
     }
+
     /**
      * Sends an acceptance message to a producer agent with a specified quantity.
      *
@@ -210,6 +215,7 @@ public class ConsumerProducerAgent extends Agent {
         msg.setContent(String.valueOf(quantity));
         send(msg);
     }
+
     /**
      * Checks if there is space available in the produced product stock.
      *
@@ -218,6 +224,7 @@ public class ConsumerProducerAgent extends Agent {
     public boolean isSpaceInProducedStock() {
         return producedProductStock < SimulationParameters.CPA_PRODUCED_PRODUCT_MAX_CAPACITY;
     }
+
     /**
      * Checks if there are any units left in the stock for the consumed product.
      *
@@ -226,6 +233,7 @@ public class ConsumerProducerAgent extends Agent {
     public boolean isStockOfConsumedProduct() {
         return consumedProductStock > 0;
     }
+
     /**
      * Adds one unit of the produced product to the stock if there is available space.
      *
@@ -238,6 +246,7 @@ public class ConsumerProducerAgent extends Agent {
             throw new RuntimeException("No Space left in Produced Product stock.");
         }
     }
+
     /**
      * Removes the consumed products from the stock.
      *
@@ -250,6 +259,7 @@ public class ConsumerProducerAgent extends Agent {
             throw new RuntimeException("No Consumed Product left.");
         }
     }
+
     /**
      * Buys a quantity of products from the producer at a specified price if there is enough money.
      *
@@ -265,6 +275,7 @@ public class ConsumerProducerAgent extends Agent {
             throw new RuntimeException("No Space left in Produced Product stock.");
         }
     }
+
     /**
      * Sells a specified quantity of the produced product at a given price.
      *
@@ -280,6 +291,7 @@ public class ConsumerProducerAgent extends Agent {
             throw new RuntimeException("No stock in produced product.");
         }
     }
+
     /**
      * Decreases the agent's satisfaction level based on a specified decay factor.
      * Updates the global satisfaction metric.
@@ -291,6 +303,7 @@ public class ConsumerProducerAgent extends Agent {
         }
         updateGlobalSatisfaction();
     }
+
     /**
      * Resets the agent's satisfaction level to the maximum value (1).
      * Updates the global satisfaction metric.
@@ -299,6 +312,7 @@ public class ConsumerProducerAgent extends Agent {
         satisfaction = 1;
         updateGlobalSatisfaction();
     }
+
     /**
      * Decreases the price of the produced product by a specified factor.
      * If the price goes below zero, it sets the price to zero.
@@ -309,12 +323,14 @@ public class ConsumerProducerAgent extends Agent {
             producedProductPrice = 0;
         }
     }
+
     /**
      * Increases the price of the produced product by a specified factor
      */
     public void increasePrice() {
         producedProductPrice += SimulationParameters.CPA_INCREASE_PRICE_FACTOR;
     }
+
     /**
      * Retrieves the consumed product associated with this agent.
      *
@@ -323,6 +339,7 @@ public class ConsumerProducerAgent extends Agent {
     public Product getConsumedProduct() {
         return consumedProduct;
     }
+
     /**
      * Retrieves the produced product associated with this agent.
      *
@@ -331,6 +348,7 @@ public class ConsumerProducerAgent extends Agent {
     public Product getProducedProduct() {
         return producedProduct;
     }
+
     /**
      * Retrieves the production speed of this agent.
      *
@@ -339,6 +357,7 @@ public class ConsumerProducerAgent extends Agent {
     public long getProductionSpeed() {
         return productionSpeed;
     }
+
     /**
      * Retrieves the consumption speed of this agent.
      *
@@ -347,6 +366,7 @@ public class ConsumerProducerAgent extends Agent {
     public long getConsumptionSpeed() {
         return consumptionSpeed;
     }
+
     /**
      * Gets the satisfaction level of the agent.
      *
@@ -355,6 +375,7 @@ public class ConsumerProducerAgent extends Agent {
     public float getSatisfaction() {
         return satisfaction;
     }
+
     /**
      * Gets the current money amount of the agent.
      *
@@ -363,6 +384,7 @@ public class ConsumerProducerAgent extends Agent {
     public float getMoney() {
         return money;
     }
+
     /**
      * Gets the price of the produced product.
      *
@@ -371,6 +393,7 @@ public class ConsumerProducerAgent extends Agent {
     public float getProducedProductPrice() {
         return producedProductPrice;
     }
+
     /**
      * Retrieves the current stock of the produced product held by this agent.
      *
@@ -379,6 +402,7 @@ public class ConsumerProducerAgent extends Agent {
     public int getProducedProductStock() {
         return producedProductStock;
     }
+
     /**
      * Retrieves the period for price variation of the produced product.
      *
@@ -387,6 +411,7 @@ public class ConsumerProducerAgent extends Agent {
     public long getPriceVariationPeriod() {
         return priceVariationPeriod;
     }
+
     /**
      * Checks if the agent is currently in a buying state.
      *
@@ -395,6 +420,7 @@ public class ConsumerProducerAgent extends Agent {
     public boolean isCurrentlyBuying() {
         return currentlyBuying;
     }
+
     /**
      * Sets the currently buying state of the agent.
      *
