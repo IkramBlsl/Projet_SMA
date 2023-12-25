@@ -23,5 +23,5 @@ The Consumer Producer Agent System simulates an environment where agents consume
 
 
 ## Execution
-- You can compile the program using this command: javac -d ./out ./src/*.java
-- You can launch the execution using this command: java -cp "/path/to/jade:./out" jade.Boot -gui -agents s:SimulationAgent
+- You can compile the program using this command: javac -cp /lib/jade.jar -d ./out ./src/*.java
+- You can launch the execution using this command: java -cp /lib/jade.jar:./out jade.Boot -gui -agents s:SimulationAgent
