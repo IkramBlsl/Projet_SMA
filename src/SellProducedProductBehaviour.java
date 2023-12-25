@@ -54,9 +54,9 @@ public class SellProducedProductBehaviour extends CyclicBehaviour {
                     propositionMessage.addReceiver(msgSender);
                     propositionMessage.setContent(proposition.getProduct().getValue() + " " + proposition.getAvailableQuantity() + " " + proposition.getPrice());
                     consumerProducerAgent.send(propositionMessage);
+                    System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a envoyé une proposition à " + msgSender.getLocalName() + ".");
                 } catch (Exception e) {
-                    throw new RuntimeException("Error when parsing CFP message : " + e.getMessage());
-                    // TODO : Better deal with this
+                    System.err.println("Agent " + consumerProducerAgent.getLocalName() + " | Error when parsing CFP message : " + e.getMessage());
                 }
             } else {
                 block();
@@ -85,9 +85,9 @@ public class SellProducedProductBehaviour extends CyclicBehaviour {
                         ACLMessage confirmMessage = new ACLMessage(ACLMessage.CONFIRM);
                         confirmMessage.addReceiver(msgSender);
                         consumerProducerAgent.send(confirmMessage);
+                        System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a confimé la transaction avec " + msgSender.getLocalName() + ".");
                     } catch (Exception e) {
-                        throw new RuntimeException("Error when parsing ACCEPT message : " + e.getMessage());
-                        // TODO : Better deal with this
+                        System.err.println("Agent " + consumerProducerAgent.getLocalName() + " | Error when parsing ACCEPT message : " + e.getMessage());
                     }
                 }
 

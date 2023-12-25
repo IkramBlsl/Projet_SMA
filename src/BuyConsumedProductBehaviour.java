@@ -67,8 +67,9 @@ public class BuyConsumedProductBehaviour extends SimpleBehaviour {
 
                 // We register this proposition for further evaluation of the best proposal
                 propositions.add(new Proposition(msgSender, consumedProduct, availableQuantity, price));
+                System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a reçu une proposition de " + msgSender.getLocalName() + ".");
             } catch (Exception e) {
-                System.err.println("Error when parsing PROPOSE message" + e.getMessage());
+                System.err.println("Agent " + consumerProducerAgent.getLocalName() + " | Error when parsing PROPOSE message. " + e.getMessage());
             }
 
             // Decreasing number of expected propositions
@@ -124,6 +125,7 @@ public class BuyConsumedProductBehaviour extends SimpleBehaviour {
                     consumerProducerAgent.setCurrentlyBuying(false);
                 } else {
                     consumerProducerAgent.sendACCEPTToConsumedProductProducer(bestProposition.getSenderReceiver(), buyQuantity);
+                    System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a accepté une proposition de " + bestProposition.getSenderReceiver().getLocalName() + ".");
                     consumerProducerAgent.addBehaviour(new AwaitConfirmBehaviour(consumerProducerAgent, bestProposition, buyQuantity));
                 }
             } catch (NoSuchElementException e) {
@@ -173,6 +175,7 @@ public class BuyConsumedProductBehaviour extends SimpleBehaviour {
                 consumerProducerAgent.buyConsumedProducts(buyQuantity, proposition.getPrice());
                 messageReceived = true;
                 consumerProducerAgent.setCurrentlyBuying(false);
+                System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a terminé la transaction avec " + proposition.getSenderReceiver().getLocalName() + ".");
             } else {
                 block();
             }

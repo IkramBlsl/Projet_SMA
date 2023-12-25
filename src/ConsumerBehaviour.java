@@ -40,17 +40,19 @@ public class ConsumerBehaviour extends TickerBehaviour {
         } else {
             // If there is no longer any stock of the product consumed by the agent, then the agent will try to buy the product in question (if he isn't already doing so).
             // And his satisfaction will decrease exponentially.
-            if (!consumerProducerAgent.isCurrentlyBuying()) {
-                consumerProducerAgent.addBehaviour(new BuyConsumedProductBehaviour(consumerProducerAgent));
-            }
             consumerProducerAgent.decreaseSatisfaction();
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " n'a pas consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());
+            if (!consumerProducerAgent.isCurrentlyBuying()) {
+                System.out.println("Agent " + consumerProducerAgent.getLocalName() + " est entrain d'acheter son consommable.");
+                consumerProducerAgent.addBehaviour(new BuyConsumedProductBehaviour(consumerProducerAgent));
+            }
         }
 
         // If the agent becomes satisfied (it wasn't before), it will decide to clone itself with a certain probability.
         if (!previouslySatisfied && consumerProducerAgent.isSatisfied()) {
             Random random = new Random();
             if (random.nextFloat(1) < SimulationParameters.CPA_CLONING_FACTOR) {
+                System.out.println("Agent " + consumerProducerAgent.getLocalName() + " s'est clonné.");
                 consumerProducerAgent.cloneAgent();
             }
             previouslySatisfied = true;
