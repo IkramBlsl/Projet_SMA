@@ -225,14 +225,14 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public void decreasePrice() {
-        producedMerchandisePrice *= (float) Math.exp(-0.05);
+        producedMerchandisePrice -= 0.1F;
         if (producedMerchandisePrice < 0) {
             producedMerchandisePrice = 0;
         }
     }
 
     public void increasePrice() {
-        producedMerchandisePrice *= (float) Math.exp(0.05);
+        producedMerchandisePrice += 0.1F;
     }
 
     public Merchandise getConsumedMerchandise() {
