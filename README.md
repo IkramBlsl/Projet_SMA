@@ -34,9 +34,7 @@ Agents will engage in buying, selling, producing, and consuming merchandise.
 
 
 ## Documentation
-The source code is commented and the Javadoc is generated. If you have to
-generate it again, you can
-type `javadoc -d ./doc src/*` given that every source file is in the src directory. 
+- The source code is commented and the Javadoc is generated. If you have to generate it again, you can type `javadoc -d ./doc src/*` given that every source file is in the src directory. 
 
 
 ## Execusion
