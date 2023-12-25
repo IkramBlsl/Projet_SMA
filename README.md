@@ -1,12 +1,12 @@
 ## Consumer Producer Agent System
 
-The Consumer Producer Agent System simulates an environment where agents consume and produce different types of merchandise. The agents interact with each other by buying, selling, and monitoring satisfaction levels based on their consumption and production.
+The Consumer Producer Agent System simulates an environment where agents consume and produce different types of products. The agents interact with each other by buying, selling, and monitoring satisfaction levels based on their consumption and production.
 [projetSMA.pdf](https://github.com/IkramBlsl/Projet_SMA/files/13692527/projetSMA.pdf)
 
 ## Features
 
 - Agent Interaction: Agents can communicate, buy, and sell merchandise among each other.
-- Consumption & Production: Agents can consume and produce various types of merchandise.
+- Consumption & Production: Agents can consume and produce various types of products.
 - Satisfaction Management: Agents' satisfaction levels change based on their consumption and trade experiences.
 - Dynamic Behavior: The system provides cyclic behaviors to simulate production, consumption, and trade decisions.
 
@@ -30,7 +30,7 @@ The Consumer Producer Agent System simulates an environment where agents consume
 
 **Interact**:
 - Observe the interactions between agents in the console output.
-- Agents will engage in buying, selling, producing, and consuming merchandise.
+- Agents will engage in buying, selling, producing, and consuming products.
 
 
 ## Documentation
@@ -38,3 +38,6 @@ The Consumer Producer Agent System simulates an environment where agents consume
 
 
 ## Execusion
+
+You can compile the program using this command:
+You can launch the execution using this command: java jade.Boot -gui -agents
