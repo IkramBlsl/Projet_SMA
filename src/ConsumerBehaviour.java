@@ -50,7 +50,7 @@ public class ConsumerBehaviour extends TickerBehaviour {
         // If the agent becomes satisfied (it wasn't before), it will decide to clone itself with a certain probability.
         if (!previouslySatisfied && consumerProducerAgent.isSatisfied()) {
             Random random = new Random();
-            if (random.nextFloat(0, 1) < SimulationParameters.CPA_CLONING_FACTOR) {
+            if (random.nextFloat(1) < SimulationParameters.CPA_CLONING_FACTOR) {
                 consumerProducerAgent.cloneAgent();
             }
             previouslySatisfied = true;
