@@ -14,7 +14,7 @@ The Consumer Producer Agent System simulates an environment where agents consume
 ## Requirements
 
     Java Development Kit (JDK)
-    JADE [Java Agent DEvelopment Framework](https://jade.tilab.com/maven/com/tilab/jade/jade/4.5.0/jade-4.5.0.jar)
+    JADE (Java Agent DEvelopment Framework)
 
 
 
