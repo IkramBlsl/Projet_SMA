@@ -23,7 +23,7 @@ public class SellProducedMerchandiseBehaviour extends CyclicBehaviour {
     public void action() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
         // Receive CFP messages from consumers
-        ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.CFP));
+        ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.CFP), MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL), MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL))));
         if (msg != null) {
             AID msgSender = msg.getSender();
 
