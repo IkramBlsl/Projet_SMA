@@ -1,5 +1,6 @@
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.ParallelBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -61,17 +62,18 @@ public class ConsumerProducerAgent extends Agent {
         // Register Agent to DF
         registerToDF();
 
+        ParallelBehaviour pb = new ParallelBehaviour();
+
         // Consumer Behaviour
-        addBehaviour(new ConsumerBehaviour(this));
-
+        pb.addSubBehaviour(new ConsumerBehaviour(this));
         // Producer Behaviour
-        addBehaviour(new ProducerBehaviour(this));
-
+        pb.addSubBehaviour(new ProducerBehaviour(this));
         // Selling Behaviour
-        addBehaviour(new SellProducedProductBehaviour(this));
-
+        pb.addSubBehaviour(new SellProducedProductBehaviour(this));
         // Price variation Behaviour
-        addBehaviour(new PriceVariationBehaviour(this));
+        pb.addSubBehaviour(new PriceVariationBehaviour(this));
+
+        addBehaviour(pb);
     }
 
     @Override
@@ -126,7 +128,7 @@ public class ConsumerProducerAgent extends Agent {
     private void showMeanSatisfaction() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         float meanSatisfaction = (globalSatisfaction / nbUpdatedGlobalSatisfaction) * 100;
-        System.out.println("Agent " + getName() + " mean satisfaction is " + decimalFormat.format(meanSatisfaction) + "%");
+        System.out.println("Agent " + getLocalName() + " mean satisfaction is " + decimalFormat.format(meanSatisfaction) + "%");
     }
 
     public boolean isSatisfied() {
