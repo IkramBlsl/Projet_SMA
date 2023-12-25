@@ -11,22 +11,17 @@ import java.util.NoSuchElementException;
  * Class representing the behavior for purchasing consumed merchandise from producers.
  * Compares producers' propositions and accepts the best offer for purchase.
  */
-
 public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
-    private long startTime;
-    private final long timeout;  // Timeout in milliseconds
-
     private final ArrayList<Proposition> propositions;
+    private int nbExpectedPropositions;
 
     /**
      * Constructor for BuyConsumedMerchandiseBehaviour class.
      * @param a Consumer-producer agent
-     * @param timeout Timeout duration before the behavior finishes
      */
-    public BuyConsumedMerchandiseBehaviour(ConsumerProducerAgent a, long timeout) {
+    public BuyConsumedMerchandiseBehaviour(ConsumerProducerAgent a) {
         super(a);
-        this.timeout = timeout;
         this.propositions = new ArrayList<>();
     }
 
@@ -39,8 +34,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
         // Send CFP to all producers
-        consumerProducerAgent.sendCFPToConsumedMerchandiseProducers();
-        startTime = System.currentTimeMillis();
+        this.nbExpectedPropositions = consumerProducerAgent.sendCFPToConsumedMerchandiseProducers();
     }
 
     /**
@@ -68,6 +62,9 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                 throw new RuntimeException("Error when parsing PROPOSE message");
                 // TODO : Better deal with this
             }
+            nbExpectedPropositions--;
+        } else {
+            block();
         }
     }
 
@@ -78,7 +75,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
      */
     @Override
     public boolean done() {
-        if (System.currentTimeMillis() - startTime >= timeout) {
+        if (nbExpectedPropositions == 0) {
             ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
             try {
@@ -109,11 +106,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                 if (buyQuantity == 0) {
                     consumerProducerAgent.sendREJECTToConsumedMerchandiseProducer(bestProposition.getSender());
                 } else {
-                    consumerProducerAgent.sendACCEPTToConsumedMerchandiseProducer(bestProposition.getSender(), buyQuantity);
-                    ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM));
-                    if (msg != null) {
-                        consumerProducerAgent.buyConsumedMerchandises(buyQuantity, bestProposition.getPrice());
-                    }
+                    consumerProducerAgent.addBehaviour(new AwaitConfirmBehaviour(consumerProducerAgent, bestProposition, buyQuantity));
                 }
             } catch (NoSuchElementException e) {
                 // TODO : Deal with this exception
@@ -123,6 +116,42 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
             return true;
         }
         return false;
+    }
+
+    private static class AwaitConfirmBehaviour extends SimpleBehaviour {
+
+        private boolean messageReceived;
+
+        private final Proposition proposition;
+        private final int buyQuantity;
+
+        public AwaitConfirmBehaviour(ConsumerProducerAgent a, Proposition proposition, int buyQuantity) {
+            super(a);
+            this.proposition = proposition;
+            this.buyQuantity = buyQuantity;
+            this.messageReceived = false;
+        }
+
+        @Override
+        public void action() {
+            ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
+
+            ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), MessageTemplate.MatchPerformative(ACLMessage.DISCONFIRM)));
+            if (msg != null) {
+                if (msg.getPerformative() == ACLMessage.CONFIRM) {
+                    consumerProducerAgent.buyConsumedMerchandises(buyQuantity, proposition.getPrice());
+                }
+                messageReceived = true;
+            } else {
+                block();
+            }
+        }
+
+        @Override
+        public boolean done() {
+            return messageReceived;
+        }
+
     }
 
 }

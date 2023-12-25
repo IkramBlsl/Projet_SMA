@@ -106,7 +106,7 @@ public class ConsumerProducerAgent extends Agent {
 
     private void cloneAgent() {}
 
-    public void sendCFPToConsumedMerchandiseProducers() {
+    public int sendCFPToConsumedMerchandiseProducers() {
         AID[] agents = searchConsumedMerchandiseProducersInDF();
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         for (AID agent : agents) {
@@ -114,6 +114,8 @@ public class ConsumerProducerAgent extends Agent {
         }
         msg.setContent(consumedMerchandise.getValue());
         send(msg);
+
+        return agents.length;
     }
 
     public void sendREJECTToConsumedMerchandiseProducer(AID agent) {
