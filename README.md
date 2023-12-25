@@ -19,7 +19,7 @@ The Consumer Producer Agent System simulates an environment where agents consume
 
 
 ## Documentation
-- The source code is commented and the Javadoc is generated. If you have to generate it again, you can type `javadoc -cp [path to jade] -d ./doc src/*` given that every source file is in the src directory. 
+- The source code is commented and the Javadoc is generated. If you have to generate it again, you can type `javadoc -cp ./lib/jade.jar -d ./doc src/*` given that every source file is in the src directory. 
 
 
 ## Execution
