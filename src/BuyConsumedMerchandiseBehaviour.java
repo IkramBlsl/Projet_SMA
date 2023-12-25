@@ -139,7 +139,6 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
             ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), MessageTemplate.MatchPerformative(ACLMessage.DISCONFIRM)));
             if (msg != null) {
-                System.out.println("test");
                 if (msg.getPerformative() == ACLMessage.CONFIRM) {
                     consumerProducerAgent.buyConsumedMerchandises(buyQuantity, proposition.getPrice());
                 }

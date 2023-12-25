@@ -35,15 +35,13 @@ public class SellProducedMerchandiseBehaviour extends CyclicBehaviour {
                     Merchandise producedMerchandise = Merchandise.parseMerchandise(msgArgs[0]);
                     assert producedMerchandise == consumerProducerAgent.getProducedMerchandise();
 
-                    if (consumerProducerAgent.getProducedMerchandiseStock() > 0) {
-                        // Create and send a proposition message to the consumer
-                        Proposition proposition = new Proposition(msgSender, producedMerchandise, consumerProducerAgent.getProducedMerchandiseStock(), consumerProducerAgent.getProducedMerchandisePrice());
-                        awaitingPropositions.putIfAbsent(msgSender.getName(), proposition);
-                        ACLMessage propositionMessage = new ACLMessage(ACLMessage.PROPOSE);
-                        propositionMessage.addReceiver(msgSender);
-                        propositionMessage.setContent(proposition.getProduct().getValue() + " " + proposition.getQuantity() + " " + proposition.getPrice());
-                        consumerProducerAgent.send(propositionMessage);
-                    }
+                    // Create and send a proposition message to the consumer
+                    Proposition proposition = new Proposition(msgSender, producedMerchandise, consumerProducerAgent.getProducedMerchandiseStock(), consumerProducerAgent.getProducedMerchandisePrice());
+                    awaitingPropositions.putIfAbsent(msgSender.getName(), proposition);
+                    ACLMessage propositionMessage = new ACLMessage(ACLMessage.PROPOSE);
+                    propositionMessage.addReceiver(msgSender);
+                    propositionMessage.setContent(proposition.getProduct().getValue() + " " + proposition.getQuantity() + " " + proposition.getPrice());
+                    consumerProducerAgent.send(propositionMessage);
                 } catch (Exception e) {
                     throw new RuntimeException("Error when parsing CFP message : " + e.getMessage());
                     // TODO : Better deal with this
