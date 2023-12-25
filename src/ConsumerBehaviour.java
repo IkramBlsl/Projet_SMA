@@ -3,19 +3,18 @@ import jade.core.behaviours.TickerBehaviour;
 import java.util.Random;
 
 /**
- * Behavior class for the Consumer agent.
- * This behavior is cyclic, continuously checking the stock of the consumed product.
- * If there's enough stock, it consumes the product, updating the agent's satisfaction.
- * If not, it decides to purchase from a producer, reducing the agent's satisfaction.
+ * Represents an agent's responsible consumption behavior.
+ * This behavior is triggered every X milliseconds (determined by the consumption speed).
+ * If the agent has stocks of the product consumed, it consumes a product.
+ * If not, it will try to buy the product from a producer. And his satisfaction will decrease.
  */
 public class ConsumerBehaviour extends TickerBehaviour {
 
     private boolean previouslySatisfied;
 
     /**
-     * Constructor for the ConsumerBehaviour class.
-     *
-     * @param a The instance of the ConsumerProducerAgent.
+     * This constructor creates a consumption behavior for the product consumed by the agent.
+     * @param a consumer-producer agent for which this behavior is linked.
      */
     public ConsumerBehaviour(ConsumerProducerAgent a) {
         super(a, a.getConsumptionSpeed());
@@ -23,22 +22,24 @@ public class ConsumerBehaviour extends TickerBehaviour {
     }
 
     /**
-     * Action method of the behavior.
-     * Checks the stock of the consumed product and performs actions accordingly.
+     * This function is called every X milliseconds (depending on consumption speed).
+     * If the agent has stocks of the product consumed, he will consume a product.
+     * If not, he will try to buy the product from a producer. And his satisfaction will decrease.
      */
     @Override
     protected void onTick() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
         if (consumerProducerAgent.isStockOfConsumedProduct()) {
-            // Consuming product
+            // If there is stock of the product consumed, it consumes one of the products in the stock.
             consumerProducerAgent.removeOneConsumedProduct();
-            consumerProducerAgent.resetSatisfaction();
-
+            if (consumerProducerAgent.getSatisfaction() < 1) {
+                consumerProducerAgent.resetSatisfaction();
+            }
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé.");
         } else {
-            // Si le stock est trop faible pour consommer, agir en conséquence
-            // décider d'acheter auprès d'un producteur
+            // If there is no longer any stock of the product consumed by the agent, then the agent will try to buy the product in question (if he isn't already doing so).
+            // And his satisfaction will decrease exponentially.
             if (!consumerProducerAgent.isCurrentlyBuying()) {
                 consumerProducerAgent.addBehaviour(new BuyConsumedProductBehaviour(consumerProducerAgent));
             }
@@ -46,6 +47,7 @@ public class ConsumerBehaviour extends TickerBehaviour {
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " n'a pas consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());
         }
 
+        // If the agent becomes satisfied (it wasn't before), it will decide to clone itself with a certain probability.
         if (!previouslySatisfied && consumerProducerAgent.isSatisfied()) {
             Random random = new Random();
             if (random.nextFloat(0, 1) < 0.4) {

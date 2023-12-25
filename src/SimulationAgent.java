@@ -10,8 +10,6 @@ import jade.wrapper.StaleProxyException;
  */
 public class SimulationAgent extends Agent {
 
-    public static long SIMULATION_DURATION = 120_000;
-
     /**
      * This function is responsible for launching the agent representing the simulation.
      */
@@ -22,7 +20,7 @@ public class SimulationAgent extends Agent {
         try {
             simulationDuration = Long.parseLong(args[0].toString());
         } catch (Exception ignored) {
-            simulationDuration = SIMULATION_DURATION;
+            simulationDuration = SimulationParameters.SIMULATION_DURATION;
         }
 
         // Start simulation.

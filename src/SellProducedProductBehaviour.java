@@ -65,10 +65,10 @@ public class SellProducedProductBehaviour extends CyclicBehaviour {
                     String msgContent = msg.getContent();
                     String[] msgArgs = msgContent.split(" ");
                     try {
-                        // Parse the quantity from the ACCEPT_PROPOSAL message
-                        int quantity = Integer.parseInt(msgArgs[0]);
+                        // Parse the buy quantity from the ACCEPT_PROPOSAL message
+                        int buyQuantity = Integer.parseInt(msgArgs[0]);
 
-                        consumerProducerAgent.sellProducedProducts(quantity);
+                        consumerProducerAgent.sellProducedProducts(buyQuantity, awaitingProposition.getPrice());
                         awaitingProposition = null;
 
                         ACLMessage confirmMessage = new ACLMessage(ACLMessage.CONFIRM);

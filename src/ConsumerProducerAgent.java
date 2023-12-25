@@ -20,8 +20,6 @@ import java.util.UUID;
  */
 public class ConsumerProducerAgent extends Agent {
 
-    private static final int PRODUCED_PRODUCT_MAX_STOCK = 500;
-
     private Product consumedProduct;
     private Product producedProduct;
 
@@ -33,7 +31,7 @@ public class ConsumerProducerAgent extends Agent {
     private long priceVariationPeriod;
 
     private int consumedProductStock = 0;
-    private float money = 10;
+    private float money = SimulationParameters.CPA_BASE_MONEY;
     private float satisfaction = 1;
     private boolean currentlyBuying = false;
 
@@ -42,9 +40,9 @@ public class ConsumerProducerAgent extends Agent {
 
     protected void setup() {
         Random random = new Random();
-        productionSpeed = random.nextLong(1000, 5000);
-        consumptionSpeed = random.nextLong(1000, 5000);
-        priceVariationPeriod = random.nextLong(1000, 5000);
+        productionSpeed = random.nextLong(SimulationParameters.CPA_PRODUCTION_SPEED_BOUND);
+        consumptionSpeed = random.nextLong(SimulationParameters.CPA_CONSUMPTION_SPEED_BOUND);
+        priceVariationPeriod = random.nextLong(SimulationParameters.CPA_PRICE_VARIATION_PERIOD_BOUND);
 
         Object[] args = getArguments();
         try {
@@ -54,7 +52,7 @@ public class ConsumerProducerAgent extends Agent {
             this.consumedProduct = consumedProduct;
             this.producedProduct = producedProduct;
         } catch (Exception e) {
-            System.out.println("Terminating agent due to exception. " + e.getMessage());
+            System.err.println("Terminating agent due to exception. " + e.getMessage());
             doDelete(); // Terminate the agent.
             return;
         }
@@ -132,7 +130,7 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public boolean isSatisfied() {
-        return (money > 10 && satisfaction > 0.5);
+        return (money > SimulationParameters.CPA_MONEY_SATISFACTION && satisfaction > 0.5);
     }
 
     public void cloneAgent() {
@@ -172,7 +170,7 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public boolean isSpaceInProducedStock() {
-        return producedProductStock < PRODUCED_PRODUCT_MAX_STOCK;
+        return producedProductStock < SimulationParameters.CPA_PRODUCED_PRODUCT_MAX_CAPACITY;
     }
 
     public boolean isStockOfConsumedProduct() {
@@ -180,7 +178,7 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public void addOneProducedProduct() {
-        if (producedProductStock < PRODUCED_PRODUCT_MAX_STOCK) {
+        if (producedProductStock < SimulationParameters.CPA_PRODUCED_PRODUCT_MAX_CAPACITY) {
             producedProductStock++;
         } else {
             throw new RuntimeException("No Space left in Produced Product stock.");
@@ -204,17 +202,17 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
-    public void sellProducedProducts(int quantity) {
+    public void sellProducedProducts(int quantity, float price) {
         if (quantity <= producedProductStock) {
             producedProductStock -= quantity;
-            money += (quantity * producedProductPrice);
+            money += (quantity * price);
         } else {
             throw new RuntimeException("No stock in produced product.");
         }
     }
 
     public void decreaseSatisfaction() {
-        satisfaction *= (float) Math.exp(-0.05);
+        satisfaction *= (float) Math.exp(-SimulationParameters.CPA_DECREASE_SATISFACTION_EXP_FACTOR);
         if (satisfaction < 0) {
             satisfaction = 0;
         }
@@ -227,14 +225,14 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public void decreasePrice() {
-        producedProductPrice -= 0.1F;
+        producedProductPrice -= SimulationParameters.CPA_DECREASE_PRICE_FACTOR;
         if (producedProductPrice < 0) {
             producedProductPrice = 0;
         }
     }
 
     public void increasePrice() {
-        producedProductPrice += 0.1F;
+        producedProductPrice += SimulationParameters.CPA_INCREASE_PRICE_FACTOR;
     }
 
     public Product getConsumedProduct() {
