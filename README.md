@@ -5,7 +5,7 @@ The Consumer Producer Agent System simulates an environment where agents consume
 
 ## Features
 
-- Agent Interaction: Agents can communicate, buy, and sell merchandise among each other.
+- Agent Interaction: Agents can communicate, buy, and sell products among each other.
 - Consumption & Production: Agents can consume and produce various types of products.
 - Satisfaction Management: Agents' satisfaction levels change based on their consumption and trade experiences.
 - Dynamic Behavior: The system provides cyclic behaviors to simulate production, consumption, and trade decisions.
@@ -23,5 +23,5 @@ The Consumer Producer Agent System simulates an environment where agents consume
 
 
 ## Execution
-- You can compile the program using this command:
+- You can compile the program using this command:javac -classpath [path to jade.jar] ./src/*.java
 - You can launch the execution using this command: java jade.Boot -gui -agents
