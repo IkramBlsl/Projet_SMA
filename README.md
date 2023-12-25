@@ -36,7 +36,7 @@ Interact:
 ## Documentation
 The source code is commented and the Javadoc is generated. If you have to
 generate it again, you can
-type `javadoc -d ./doc src/*` given that every source file is in the src directory. The `-d doc` option sets the name of the directory in which the Javadoc will be generated.
+type `javadoc -d ./doc src/*` given that every source file is in the src directory. 
 
 
 ## Execusion
