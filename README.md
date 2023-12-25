@@ -29,8 +29,8 @@ The Consumer Producer Agent System simulates an environment where agents consume
 - Run the agents by starting the main agent classes.
 
 **Interact**:
-Observe the interactions between agents in the console output.
-Agents will engage in buying, selling, producing, and consuming merchandise.
+- Observe the interactions between agents in the console output.
+- Agents will engage in buying, selling, producing, and consuming merchandise.
 
 
 ## Documentation
