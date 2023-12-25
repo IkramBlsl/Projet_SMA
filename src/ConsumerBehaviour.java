@@ -28,14 +28,15 @@ public class ConsumerBehaviour extends TickerBehaviour {
         if (consumerProducerAgent.isStockOfConsumedMerchandise()) {
             // Consuming merchandise
             consumerProducerAgent.removeOneConsumedMerchandise();
-
-            System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());
             consumerProducerAgent.setSatisfaction(1.0f);
+
+            System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé.");
         } else {
             // Si le stock est trop faible pour consommer, agir en conséquence
             // décider d'acheter auprès d'un producteur
             consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent, consumerProducerAgent.getConsumptionSpeed() - 500));
             consumerProducerAgent.decreaseSatisfaction(0.1f); // Réduire la satisfaction ( de 0.1 à changer )
+            System.out.println("Agent " + consumerProducerAgent.getLocalName() + " n'a pas consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());
         }
     }
 

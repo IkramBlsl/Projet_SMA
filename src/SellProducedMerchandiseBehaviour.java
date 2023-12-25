@@ -23,10 +23,10 @@ public class SellProducedMerchandiseBehaviour extends CyclicBehaviour {
                 Merchandise producedMerchandise = Merchandise.parseMerchandise(msgArgs[0]);
                 assert producedMerchandise == consumerProducerAgent.getProducedMerchandise();
 
-                if (consumerProducerAgent.getStockProducedMerchandise() > 0) {
+                if (consumerProducerAgent.getProducedMerchandiseStock() > 0) {
                     ACLMessage propositionMessage = new ACLMessage(ACLMessage.PROPOSE);
                     propositionMessage.addReceiver(msgSender);
-                    propositionMessage.setContent(producedMerchandise.getValue() + " " + consumerProducerAgent.getStockProducedMerchandise() + " " + consumerProducerAgent.getPriceProducedMerchandise());
+                    propositionMessage.setContent(producedMerchandise.getValue() + " " + consumerProducerAgent.getProducedMerchandiseStock() + " " + consumerProducerAgent.getProducedMerchandisePrice());
                     consumerProducerAgent.send(propositionMessage);
 
                     msg = consumerProducerAgent.blockingReceive(MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL), MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL)));

@@ -27,7 +27,6 @@ public class ProducerBehaviour extends TickerBehaviour {
 
         if (consumerProducerAgent.isSpaceInProducedStock()) {
             // Produce merchandise
-            System.out.println("Producing new " + consumerProducerAgent.getProducedMerchandise());
             consumerProducerAgent.addOneProducedMerchandise();
         } else {
             // Optional: Handle the case where there is no space in the produced stock

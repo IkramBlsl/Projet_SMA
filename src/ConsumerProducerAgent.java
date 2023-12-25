@@ -12,18 +12,19 @@ import jade.lang.acl.ACLMessage;
  */
 public class ConsumerProducerAgent extends Agent {
 
+    private static final int PRODUCED_MERCHANDISE_MAX_STOCK = 500;
+
     private Merchandise consumedMerchandise;
     private Merchandise producedMerchandise;
 
-    private float priceProducedMerchandise = 1;
-    private int stockProducedMerchandise = 0;
-    private int maxStockProducedMerchandise = 500; // TODO
+    private float producedMerchandisePrice = 1;
+    private int producedMerchandiseStock = 0;
 
     private long consumptionSpeed;
     private long productionSpeed;
 
-    private int stockConsumedMerchandise = 0;
-    private float money = 100;
+    private int consumedMerchandiseStock = 0;
+    private float money = 10;
     private float satisfaction = 1;
 
     protected void setup() {
@@ -129,24 +130,24 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public boolean isSpaceInProducedStock() {
-        return stockProducedMerchandise < maxStockProducedMerchandise;
+        return producedMerchandiseStock < PRODUCED_MERCHANDISE_MAX_STOCK;
     }
 
     public boolean isStockOfConsumedMerchandise() {
-        return stockConsumedMerchandise > 0;
+        return consumedMerchandiseStock > 0;
     }
 
     public void addOneProducedMerchandise() {
-        if (stockProducedMerchandise < maxStockProducedMerchandise) {
-            stockProducedMerchandise++;
+        if (producedMerchandiseStock < PRODUCED_MERCHANDISE_MAX_STOCK) {
+            producedMerchandiseStock++;
         } else {
             throw new RuntimeException("No Space left in Produced Merchandise stock.");
         }
     }
 
     public void removeOneConsumedMerchandise() {
-        if (stockConsumedMerchandise > 0) {
-            stockConsumedMerchandise--;
+        if (consumedMerchandiseStock > 0) {
+            consumedMerchandiseStock--;
         } else {
             throw new RuntimeException("No Consumed Merchandise left.");
         }
@@ -154,7 +155,7 @@ public class ConsumerProducerAgent extends Agent {
 
     public void buyConsumedMerchandises(int quantity, float price) {
         if ((quantity * price) <= money) {
-            stockConsumedMerchandise += quantity;
+            consumedMerchandiseStock += quantity;
             money -= (quantity * price);
         } else {
             throw new RuntimeException("No Space left in Produced Merchandise stock.");
@@ -162,9 +163,9 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public void sellProducedMerchandises(int quantity) {
-        if (quantity <= stockProducedMerchandise) {
-            stockProducedMerchandise -= quantity;
-            money += (quantity * priceProducedMerchandise);
+        if (quantity <= producedMerchandiseStock) {
+            producedMerchandiseStock -= quantity;
+            money += (quantity * producedMerchandisePrice);
         } else {
             throw new RuntimeException("No stock in produced merchandise.");
         }
@@ -211,12 +212,12 @@ public class ConsumerProducerAgent extends Agent {
         return money;
     }
 
-    public float getPriceProducedMerchandise() {
-        return priceProducedMerchandise;
+    public float getProducedMerchandisePrice() {
+        return producedMerchandisePrice;
     }
 
-    public int getStockProducedMerchandise() {
-        return stockProducedMerchandise;
+    public int getProducedMerchandiseStock() {
+        return producedMerchandiseStock;
     }
 
 }

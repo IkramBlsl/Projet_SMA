@@ -61,7 +61,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                 assert consumedMerchandise == consumerProducerAgent.getConsumedMerchandise();
 
                 int quantity = Integer.parseInt(propositionArgs[1]);
-                float price = Float.parseFloat(propositionArgs[1]);
+                float price = Float.parseFloat(propositionArgs[2]);
 
                 propositions.add(new Proposition(msgSender, consumedMerchandise, quantity, price));
             } catch (Exception e) {
@@ -110,7 +110,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                     consumerProducerAgent.sendREJECTToConsumedMerchandiseProducer(bestProposition.getSender());
                 } else {
                     consumerProducerAgent.sendACCEPTToConsumedMerchandiseProducer(bestProposition.getSender(), buyQuantity);
-                    ACLMessage msg = consumerProducerAgent.blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), consumerProducerAgent.getConsumptionSpeed());
+                    ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM));
                     if (msg != null) {
                         consumerProducerAgent.buyConsumedMerchandises(buyQuantity, bestProposition.getPrice());
                     }
