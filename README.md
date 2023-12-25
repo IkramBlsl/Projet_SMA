@@ -39,5 +39,5 @@ The Consumer Producer Agent System simulates an environment where agents consume
 
 ## Execusion
 
-You can compile the program using this command:
-You can launch the execution using this command: java jade.Boot -gui -agents
+- You can compile the program using this command:
+- You can launch the execution using this command: java jade.Boot -gui -agents
