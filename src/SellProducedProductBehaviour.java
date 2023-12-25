@@ -63,7 +63,7 @@ public class SellProducedProductBehaviour extends CyclicBehaviour {
             }
         } else {
             // If there is awaiting propositions (proposal made to any consumer agent), we wait for receiving a ACCEPT or REJECT PROPOSAL message from the consumer agent for whom we made the proposition
-            ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.and(MessageTemplate.MatchReceiver(awaitingProposition.getSenderReceiver().getResolversArray()), MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL), MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL))));
+            ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.and(MessageTemplate.MatchSender(awaitingProposition.getSenderReceiver()), MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL), MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL))));
             if (msg != null) {
                 // Here, we get the sender of the message
                 AID msgSender = msg.getSender();
