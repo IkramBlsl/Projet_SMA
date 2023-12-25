@@ -29,7 +29,7 @@ public class SimulationAgent extends Agent {
         // Create a waker behavior that terminates the simulation when the simulation time is reached.
         addBehaviour(new WakerBehaviour(this, simulationDuration) {
             @Override
-            protected void handleElapsedTimeout() {
+            protected void onWake() {
                 // Stop the simulation agent.
                 myAgent.doDelete();
             }
@@ -48,6 +48,8 @@ public class SimulationAgent extends Agent {
      * In other words, it launches all Producer/Consumer agents defined in the scenario.
      */
     private void startSimulation() {
+        // BASE SIMULATION
+        // Creating 4 agents (2 consuming PRODUCT1 & producing PRODUCT 2, 2 consuming PRODUCT2 & producing PRODUCT1)
         ContainerController cc = getContainerController();
         try {
             AgentController cp1 = cc.createNewAgent("cp1", ConsumerProducerAgent.class.getName(), new String[]{"1", "2"});

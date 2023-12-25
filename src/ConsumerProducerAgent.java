@@ -15,8 +15,7 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
- * Agent class responsible for managing the consumption and production of product.
- * Manages the stock, satisfaction level, and communication with other agents for trading.
+ * JADE agent representing the consumer/producer.
  */
 public class ConsumerProducerAgent extends Agent {
 
@@ -38,13 +37,21 @@ public class ConsumerProducerAgent extends Agent {
     private float globalSatisfaction = 0;
     private int nbUpdatedGlobalSatisfaction = 0;
 
+    /**
+     * This function is responsible for launching the agent representing the consumer/producer.
+     */
     protected void setup() {
+        // Here, we get, randomly, the production, consumption speed and the price variation period
         Random random = new Random();
         productionSpeed = random.nextLong(SimulationParameters.CPA_PRODUCTION_SPEED_BOUND);
         consumptionSpeed = random.nextLong(SimulationParameters.CPA_CONSUMPTION_SPEED_BOUND);
         priceVariationPeriod = random.nextLong(SimulationParameters.CPA_PRICE_VARIATION_PERIOD_BOUND);
 
+
         Object[] args = getArguments();
+
+        // Here, we get the consumed and produced product (arguments passed to the agent when he is created)
+        // If the arguments are not valid (product doesn't exist), or not passed, we delete the agent
         try {
             Product consumedProduct = Product.parseProduct(args[0].toString());
             Product producedProduct = Product.parseProduct(args[1].toString());
@@ -57,11 +64,17 @@ public class ConsumerProducerAgent extends Agent {
             return;
         }
 
+        // Here, we get the production, consumption speed and the price variation period, if they are passed into the arguments at the creation of the agent (like when we clone an agent)
+        try {
+            consumptionSpeed = Long.parseLong(args[2].toString());
+            productionSpeed = Long.parseLong(args[3].toString());
+            priceVariationPeriod = Long.parseLong(args[4].toString());
+        } catch (Exception ignored) { }
+
         // Register Agent to DF
         registerToDF();
 
         ParallelBehaviour pb = new ParallelBehaviour();
-
         // Consumer Behaviour
         pb.addSubBehaviour(new ConsumerBehaviour(this));
         // Producer Behaviour
@@ -70,7 +83,7 @@ public class ConsumerProducerAgent extends Agent {
         pb.addSubBehaviour(new SellProducedProductBehaviour(this));
         // Price variation Behaviour
         pb.addSubBehaviour(new PriceVariationBehaviour(this));
-
+        // Add parallel behaviours to the agent
         addBehaviour(pb);
     }
 
@@ -136,7 +149,7 @@ public class ConsumerProducerAgent extends Agent {
     public void cloneAgent() {
         ContainerController cc = getContainerController();
         try {
-            AgentController cp = cc.createNewAgent(getLocalName() + "_" + UUID.randomUUID(), ConsumerProducerAgent.class.getName(), new String[]{consumedProduct.getValue(), producedProduct.getValue()});
+            AgentController cp = cc.createNewAgent(getLocalName() + "_" + UUID.randomUUID(), ConsumerProducerAgent.class.getName(), new String[]{consumedProduct.getValue(), producedProduct.getValue(), String.valueOf(consumptionSpeed), String.valueOf(productionSpeed), String.valueOf(priceVariationPeriod)});
 
             cp.start();
         } catch (StaleProxyException e) {

@@ -31,14 +31,19 @@ public class SellProducedProductBehaviour extends CyclicBehaviour {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
         if (awaitingProposition == null) {
-            // Receive CFP messages from consumers
+            // If there is no awaiting propositions (no proposal made to any consumer agent), we wait for receiving a CFP message from a consumer agent
             ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.CFP));
             if (msg != null) {
-                AID msgSender = msg.getSender();
-                String msgContent = msg.getContent();
-                String[] msgArgs = msgContent.split(" ");
-
                 try {
+                    // Here, we get all message information (sender, content)
+                    AID msgSender = msg.getSender();
+                    String msgContent = msg.getContent();
+
+                    // We now parse the arguments of the CFP message
+                    String[] msgArgs = msgContent.split(" ");
+
+                    // Here, we have one argument (the product). We parse the value of the product to a Product enum.
+                    // If we can't parse, or the product asked by the consumer agent is not produced by this agent, we raise a RuntimeException
                     Product producedProduct = Product.parseProduct(msgArgs[0]);
                     assert producedProduct == consumerProducerAgent.getProducedProduct();
 
@@ -57,20 +62,26 @@ public class SellProducedProductBehaviour extends CyclicBehaviour {
                 block();
             }
         } else {
+            // If there is awaiting propositions (proposal made to any consumer agent), we wait for receiving a ACCEPT or REJECT PROPOSAL message from the consumer agent for whom we made the proposition
             ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.and(MessageTemplate.MatchReceiver(awaitingProposition.getSenderReceiver().getResolversArray()), MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL), MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL))));
             if (msg != null) {
+                // Here, we get the sender of the message
                 AID msgSender = msg.getSender();
 
+                // If the message is an acceptation of the proposal
                 if (msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
-                    String msgContent = msg.getContent();
-                    String[] msgArgs = msgContent.split(" ");
                     try {
-                        // Parse the buy quantity from the ACCEPT_PROPOSAL message
+                        // Here, we get message content, and we parse the arguments of the ACCEPT PROPOSAL message
+                        String msgContent = msg.getContent();
+                        String[] msgArgs = msgContent.split(" ");
+
+                        // Gathering the buy quantity from the ACCEPT_PROPOSAL message
                         int buyQuantity = Integer.parseInt(msgArgs[0]);
 
+                        // We sell the product (updating money and stock of produced products)
                         consumerProducerAgent.sellProducedProducts(buyQuantity, awaitingProposition.getPrice());
-                        awaitingProposition = null;
 
+                        // We send a confirmation message, the transaction has been made
                         ACLMessage confirmMessage = new ACLMessage(ACLMessage.CONFIRM);
                         confirmMessage.addReceiver(msgSender);
                         consumerProducerAgent.send(confirmMessage);
@@ -80,9 +91,8 @@ public class SellProducedProductBehaviour extends CyclicBehaviour {
                     }
                 }
 
-                if (msg.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
-                    awaitingProposition = null;
-                }
+                // Then we have now no awaiting propositions (as the proposition has been proceed)
+                awaitingProposition = null;
             } else {
                 block();
             }
