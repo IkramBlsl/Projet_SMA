@@ -8,26 +8,26 @@ import java.util.NoSuchElementException;
 
 
 /**
- * Class representing the behavior for purchasing consumed merchandise from producers.
+ * Class representing the behavior for purchasing consumed product from producers.
  * Compares producers' propositions and accepts the best offer for purchase.
  */
-public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
+public class BuyConsumedProductBehaviour extends SimpleBehaviour {
 
     private final ArrayList<Proposition> propositions;
     private int nbExpectedPropositions;
 
     /**
-     * Constructor for BuyConsumedMerchandiseBehaviour class.
+     * Constructor for BuyConsumedProductBehaviour class.
      * @param a Consumer-producer agent
      */
-    public BuyConsumedMerchandiseBehaviour(ConsumerProducerAgent a) {
+    public BuyConsumedProductBehaviour(ConsumerProducerAgent a) {
         super(a);
         this.propositions = new ArrayList<>();
     }
 
     /**
      * Method executed at the beginning of the behavior.
-     * Sends a call for proposals to all producers of the consumed merchandise.
+     * Sends a call for proposals to all producers of the consumed product.
      */
     @Override
     public void onStart() {
@@ -35,7 +35,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
         consumerProducerAgent.setCurrentlyBuying(true);
         // Send CFP to all producers
-        this.nbExpectedPropositions = consumerProducerAgent.sendCFPToConsumedMerchandiseProducers();
+        this.nbExpectedPropositions = consumerProducerAgent.sendCFPToConsumedProductProducers();
     }
 
     /**
@@ -52,13 +52,13 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
             String msgContent = msg.getContent();
             String[] propositionArgs = msgContent.split(" ");
             try {
-                Merchandise consumedMerchandise = Merchandise.parseMerchandise(propositionArgs[0]);
-                assert consumedMerchandise == consumerProducerAgent.getConsumedMerchandise();
+                Product consumedProduct = Product.parseProduct(propositionArgs[0]);
+                assert consumedProduct == consumerProducerAgent.getConsumedProduct();
 
                 int quantity = Integer.parseInt(propositionArgs[1]);
                 float price = Float.parseFloat(propositionArgs[2]);
 
-                propositions.add(new Proposition(msgSender, consumedMerchandise, quantity, price));
+                propositions.add(new Proposition(msgSender, consumedProduct, quantity, price));
             } catch (Exception e) {
                 throw new RuntimeException("Error when parsing PROPOSE message");
                 // TODO : Better deal with this
@@ -81,11 +81,11 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
             try {
                 Proposition bestProposition = propositions.getFirst();
-                float bestRatio = bestProposition.getQuantity() / bestProposition.getPrice();
+                float bestRatio = bestProposition.getAvailableQuantity() / bestProposition.getPrice();
 
                 for (int i = 1; i < propositions.size(); i++) {
                     Proposition proposition = propositions.get(i);
-                    float currentRatio = proposition.getQuantity() / proposition.getPrice();
+                    float currentRatio = proposition.getAvailableQuantity() / proposition.getPrice();
 
                     if (currentRatio > bestRatio) {
                         bestProposition = proposition;
@@ -95,25 +95,24 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
                 for (Proposition proposition : propositions) {
                     if (proposition != bestProposition) {
-                        consumerProducerAgent.sendREJECTToConsumedMerchandiseProducer(proposition.getSender());
+                        consumerProducerAgent.sendREJECTToConsumedProductProducer(proposition.getSenderReceiver());
                     }
                 }
 
                 int buyQuantity = 0;
-                while (buyQuantity < bestProposition.getQuantity() && ((buyQuantity + 1) * bestProposition.getPrice()) < consumerProducerAgent.getMoney()) {
+                while (buyQuantity < bestProposition.getAvailableQuantity() && ((buyQuantity + 1) * bestProposition.getPrice()) < consumerProducerAgent.getMoney()) {
                     buyQuantity++;
                 }
 
                 if (buyQuantity == 0) {
-                    consumerProducerAgent.sendREJECTToConsumedMerchandiseProducer(bestProposition.getSender());
+                    consumerProducerAgent.sendREJECTToConsumedProductProducer(bestProposition.getSenderReceiver());
                     consumerProducerAgent.setCurrentlyBuying(false);
                 } else {
-                    consumerProducerAgent.sendACCEPTToConsumedMerchandiseProducer(bestProposition.getSender(), buyQuantity);
+                    consumerProducerAgent.sendACCEPTToConsumedProductProducer(bestProposition.getSenderReceiver(), buyQuantity);
                     consumerProducerAgent.addBehaviour(new AwaitConfirmBehaviour(consumerProducerAgent, bestProposition, buyQuantity));
                 }
             } catch (NoSuchElementException e) {
-                // TODO : Deal with this exception
-                System.out.println("No received propositions.");
+                consumerProducerAgent.setCurrentlyBuying(false);
             }
 
             return true;
@@ -142,7 +141,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
             ACLMessage msg = consumerProducerAgent.receive(MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), MessageTemplate.MatchPerformative(ACLMessage.DISCONFIRM)));
             if (msg != null) {
                 if (msg.getPerformative() == ACLMessage.CONFIRM) {
-                    consumerProducerAgent.buyConsumedMerchandises(buyQuantity, proposition.getPrice());
+                    consumerProducerAgent.buyConsumedProducts(buyQuantity, proposition.getPrice());
                 }
                 messageReceived = true;
                 consumerProducerAgent.setCurrentlyBuying(false);

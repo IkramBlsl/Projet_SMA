@@ -14,24 +14,24 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
- * Agent class responsible for managing the consumption and production of merchandise.
+ * Agent class responsible for managing the consumption and production of product.
  * Manages the stock, satisfaction level, and communication with other agents for trading.
  */
 public class ConsumerProducerAgent extends Agent {
 
-    private static final int PRODUCED_MERCHANDISE_MAX_STOCK = 500;
+    private static final int PRODUCED_PRODUCT_MAX_STOCK = 500;
 
-    private Merchandise consumedMerchandise;
-    private Merchandise producedMerchandise;
+    private Product consumedProduct;
+    private Product producedProduct;
 
-    private float producedMerchandisePrice = 1;
-    private int producedMerchandiseStock = 0;
+    private float producedProductPrice = 1;
+    private int producedProductStock = 0;
 
     private long consumptionSpeed;
     private long productionSpeed;
     private long priceVariationPeriod;
 
-    private int consumedMerchandiseStock = 0;
+    private int consumedProductStock = 0;
     private float money = 10;
     private float satisfaction = 1;
     private boolean currentlyBuying = false;
@@ -47,11 +47,11 @@ public class ConsumerProducerAgent extends Agent {
 
         Object[] args = getArguments();
         try {
-            Merchandise consumedMerchandise = Merchandise.parseMerchandise(args[0].toString());
-            Merchandise producedMerchandise = Merchandise.parseMerchandise(args[1].toString());
+            Product consumedProduct = Product.parseProduct(args[0].toString());
+            Product producedProduct = Product.parseProduct(args[1].toString());
 
-            this.consumedMerchandise = consumedMerchandise;
-            this.producedMerchandise = producedMerchandise;
+            this.consumedProduct = consumedProduct;
+            this.producedProduct = producedProduct;
         } catch (Exception e) {
             System.out.println("Terminating agent due to exception. " + e.getMessage());
             doDelete(); // Terminate the agent.
@@ -68,7 +68,7 @@ public class ConsumerProducerAgent extends Agent {
         addBehaviour(new ProducerBehaviour(this));
 
         // Selling Behaviour
-        addBehaviour(new SellProducedMerchandiseBehaviour(this));
+        addBehaviour(new SellProducedProductBehaviour(this));
 
         // Price variation Behaviour
         addBehaviour(new PriceVariationBehaviour(this));
@@ -76,7 +76,7 @@ public class ConsumerProducerAgent extends Agent {
 
     @Override
     protected void takeDown() {
-        showGlobalSatisfaction();
+        showMeanSatisfaction();
         try {
             DFService.deregister(this);
         } catch (FIPAException e) {
@@ -91,7 +91,7 @@ public class ConsumerProducerAgent extends Agent {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
-        sd.setType(producedMerchandise.getValue());
+        sd.setType(producedProduct.getValue());
         sd.setName(getName());
         dfd.addServices(sd);
         try {
@@ -101,10 +101,10 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
-    private AID[] searchConsumedMerchandiseProducersInDF() {
+    private AID[] searchConsumedProductProducersInDF() {
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
-        sd.setType(consumedMerchandise.getValue());
+        sd.setType(consumedProduct.getValue());
         template.addServices(sd);
         try {
             DFAgentDescription[] results = DFService.search(this, template);
@@ -123,7 +123,7 @@ public class ConsumerProducerAgent extends Agent {
         nbUpdatedGlobalSatisfaction++;
     }
 
-    private void showGlobalSatisfaction() {
+    private void showMeanSatisfaction() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         float meanSatisfaction = (globalSatisfaction / nbUpdatedGlobalSatisfaction) * 100;
         System.out.println("Agent " + getName() + " mean satisfaction is " + decimalFormat.format(meanSatisfaction) + "%");
@@ -136,7 +136,7 @@ public class ConsumerProducerAgent extends Agent {
     public void cloneAgent() {
         ContainerController cc = getContainerController();
         try {
-            AgentController cp = cc.createNewAgent(getLocalName() + "_" + UUID.randomUUID(), ConsumerProducerAgent.class.getName(), new String[]{consumedMerchandise.getValue(), producedMerchandise.getValue()});
+            AgentController cp = cc.createNewAgent(getLocalName() + "_" + UUID.randomUUID(), ConsumerProducerAgent.class.getName(), new String[]{consumedProduct.getValue(), producedProduct.getValue()});
 
             cp.start();
         } catch (StaleProxyException e) {
@@ -144,25 +144,25 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
-    public int sendCFPToConsumedMerchandiseProducers() {
-        AID[] agents = searchConsumedMerchandiseProducersInDF();
+    public int sendCFPToConsumedProductProducers() {
+        AID[] agents = searchConsumedProductProducersInDF();
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         for (AID agent : agents) {
             msg.addReceiver(agent);
         }
-        msg.setContent(consumedMerchandise.getValue());
+        msg.setContent(consumedProduct.getValue());
         send(msg);
 
         return agents.length;
     }
 
-    public void sendREJECTToConsumedMerchandiseProducer(AID agent) {
+    public void sendREJECTToConsumedProductProducer(AID agent) {
         ACLMessage msg = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
         msg.addReceiver(agent);
         send(msg);
     }
 
-    public void sendACCEPTToConsumedMerchandiseProducer(AID agent, int quantity) {
+    public void sendACCEPTToConsumedProductProducer(AID agent, int quantity) {
         ACLMessage msg = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
         msg.addReceiver(agent);
         msg.setContent(String.valueOf(quantity));
@@ -170,44 +170,44 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public boolean isSpaceInProducedStock() {
-        return producedMerchandiseStock < PRODUCED_MERCHANDISE_MAX_STOCK;
+        return producedProductStock < PRODUCED_PRODUCT_MAX_STOCK;
     }
 
-    public boolean isStockOfConsumedMerchandise() {
-        return consumedMerchandiseStock > 0;
+    public boolean isStockOfConsumedProduct() {
+        return consumedProductStock > 0;
     }
 
-    public void addOneProducedMerchandise() {
-        if (producedMerchandiseStock < PRODUCED_MERCHANDISE_MAX_STOCK) {
-            producedMerchandiseStock++;
+    public void addOneProducedProduct() {
+        if (producedProductStock < PRODUCED_PRODUCT_MAX_STOCK) {
+            producedProductStock++;
         } else {
-            throw new RuntimeException("No Space left in Produced Merchandise stock.");
+            throw new RuntimeException("No Space left in Produced Product stock.");
         }
     }
 
-    public void removeOneConsumedMerchandise() {
-        if (consumedMerchandiseStock > 0) {
-            consumedMerchandiseStock--;
+    public void removeOneConsumedProduct() {
+        if (consumedProductStock > 0) {
+            consumedProductStock--;
         } else {
-            throw new RuntimeException("No Consumed Merchandise left.");
+            throw new RuntimeException("No Consumed Product left.");
         }
     }
 
-    public void buyConsumedMerchandises(int quantity, float price) {
+    public void buyConsumedProducts(int quantity, float price) {
         if ((quantity * price) <= money) {
-            consumedMerchandiseStock += quantity;
+            consumedProductStock += quantity;
             money -= (quantity * price);
         } else {
-            throw new RuntimeException("No Space left in Produced Merchandise stock.");
+            throw new RuntimeException("No Space left in Produced Product stock.");
         }
     }
 
-    public void sellProducedMerchandises(int quantity) {
-        if (quantity <= producedMerchandiseStock) {
-            producedMerchandiseStock -= quantity;
-            money += (quantity * producedMerchandisePrice);
+    public void sellProducedProducts(int quantity) {
+        if (quantity <= producedProductStock) {
+            producedProductStock -= quantity;
+            money += (quantity * producedProductPrice);
         } else {
-            throw new RuntimeException("No stock in produced merchandise.");
+            throw new RuntimeException("No stock in produced product.");
         }
     }
 
@@ -225,22 +225,22 @@ public class ConsumerProducerAgent extends Agent {
     }
 
     public void decreasePrice() {
-        producedMerchandisePrice -= 0.1F;
-        if (producedMerchandisePrice < 0) {
-            producedMerchandisePrice = 0;
+        producedProductPrice -= 0.1F;
+        if (producedProductPrice < 0) {
+            producedProductPrice = 0;
         }
     }
 
     public void increasePrice() {
-        producedMerchandisePrice += 0.1F;
+        producedProductPrice += 0.1F;
     }
 
-    public Merchandise getConsumedMerchandise() {
-        return consumedMerchandise;
+    public Product getConsumedProduct() {
+        return consumedProduct;
     }
 
-    public Merchandise getProducedMerchandise() {
-        return producedMerchandise;
+    public Product getProducedProduct() {
+        return producedProduct;
     }
 
     public long getProductionSpeed() {
@@ -259,12 +259,12 @@ public class ConsumerProducerAgent extends Agent {
         return money;
     }
 
-    public float getProducedMerchandisePrice() {
-        return producedMerchandisePrice;
+    public float getProducedProductPrice() {
+        return producedProductPrice;
     }
 
-    public int getProducedMerchandiseStock() {
-        return producedMerchandiseStock;
+    public int getProducedProductStock() {
+        return producedProductStock;
     }
 
     public long getPriceVariationPeriod() {

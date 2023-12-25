@@ -1,51 +1,58 @@
 import jade.core.AID;
 
 /**
- * Represents a proposition for selling merchandise by a producer.
- * Contains information such as the sender, the merchandise, quantity, and price.
+ * Represents a proposition for selling product by a producer.
+ * Contains information such as the sender, the product, the available quantity, and the price.
  */
 public class Proposition {
 
-    private AID sender;
-    private Merchandise product;
-    private int quantity;
-    private float price;
+    private final AID senderReceiver;
+    private final Product product;
+    private final int availableQuantity;
+    private final float price;
 
-    public Proposition(AID sender, Merchandise product, int quantity, float price) {
-        this.sender = sender;
+    /**
+     * This builder creates a sales proposal for products.
+     * @param senderReceiver The AID of the sender/receiver of the proposition.
+     * @param product The product in the proposition.
+     * @param availableQuantity The available quantity of the product in the proposition.
+     * @param price The price of the product in the proposition.
+     */
+    public Proposition(AID senderReceiver, Product product, int availableQuantity, float price) {
+        this.senderReceiver = senderReceiver;
         this.product = product;
-        this.quantity = quantity;
+        this.availableQuantity = availableQuantity;
         this.price = price;
     }
 
     /**
-     * Retrieves the sender of the proposition.
-     * @return The sender AID of the proposition
+     * Retrieves the sender/receiver of the proposition.
+     * @return The sender/receiver AID of the proposition.
      */
-    public AID getSender() {
-        return sender;
+    public AID getSenderReceiver() {
+        return senderReceiver;
     }
 
     /**
-     * Retrieves the merchandise of the proposition.
-     * @return The merchandise offered in the proposition
+     * Retrieves the product in the proposition.
+     * @return The product in the proposition.
      */
-    public Merchandise getProduct() {
+    public Product getProduct() {
         return product;
     }
 
 
     /**
-     * Retrieves the quantity of merchandise offered in the proposition.
-     * @return The quantity of merchandise in the proposition
+     * Retrieves the available quantity of the product in the proposition.
+     * @return The available quantity of the product in the proposition.
      */
-    public int getQuantity() {
-        return quantity;
+    public int getAvailableQuantity() {
+        return availableQuantity;
     }
 
     /**
-     * Retrieves the price of the merchandise offered in the proposition.
-     * @return The price of the merchandise in the proposition
+     * Retrieves the price of the product in the proposition.
+     * @return The price of the product in the proposition.
      */
     public float getPrice() {
         return price;

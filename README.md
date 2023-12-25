@@ -35,8 +35,8 @@ Interact:
 ## Code Structure
 
 - ConsumerProducerAgent.java: The primary agent overseeing consumption, production, and trade within the system.    
-- BuyConsumedMerchandiseBehaviour.java: This class defines a behavior representing the process of purchasing consumed merchandise from producers. It compares the propositions received from producers and accepts the best offer for the purchase.
+- BuyConsumedProductBehaviour.java: This class defines a behavior representing the process of purchasing consumed merchandise from producers. It compares the propositions received from producers and accepts the best offer for the purchase.
 - ConsumerBehaviour.java: This behavior class is designed for the Consumer agent. It operates cyclically, regularly checking the stock of the consumed merchandise. If sufficient stock is available, it consumes the merchandise, updating the agent's satisfaction. Otherwise, it decides to purchase from a producer, reducing the agent's satisfaction.
 - ProducerBehaviour.java: This behavior class is designed for the Producer agent. It operates cyclically, continuously checking if there is available space in the produced merchandise stock. When space is available, it initiates the production of merchandise, adding the produced goods to the stock of merchandise sold by the agent.
 - Proposition.java: Represents a proposition made by a producer to sell merchandise. It encapsulates essential details like the sender (AID), the specific merchandise offered, the quantity, and the price associated with the proposition.
-- SellProducedMerchandiseBehaviour.java: This behavior manages the sale of produced merchandise. It listens for Call for Proposals (CFP) messages from consumers, responds with propositions, handles the acceptance or rejection of these propositions, and conducts the sale of merchandise accordingly.
+- SellProducedProductBehaviour.java: This behavior manages the sale of produced merchandise. It listens for Call for Proposals (CFP) messages from consumers, responds with propositions, handles the acceptance or rejection of these propositions, and conducts the sale of merchandise accordingly.

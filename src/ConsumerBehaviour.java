@@ -4,8 +4,8 @@ import java.util.Random;
 
 /**
  * Behavior class for the Consumer agent.
- * This behavior is cyclic, continuously checking the stock of the consumed merchandise.
- * If there's enough stock, it consumes the merchandise, updating the agent's satisfaction.
+ * This behavior is cyclic, continuously checking the stock of the consumed product.
+ * If there's enough stock, it consumes the product, updating the agent's satisfaction.
  * If not, it decides to purchase from a producer, reducing the agent's satisfaction.
  */
 public class ConsumerBehaviour extends TickerBehaviour {
@@ -24,15 +24,15 @@ public class ConsumerBehaviour extends TickerBehaviour {
 
     /**
      * Action method of the behavior.
-     * Checks the stock of the consumed merchandise and performs actions accordingly.
+     * Checks the stock of the consumed product and performs actions accordingly.
      */
     @Override
     protected void onTick() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
-        if (consumerProducerAgent.isStockOfConsumedMerchandise()) {
-            // Consuming merchandise
-            consumerProducerAgent.removeOneConsumedMerchandise();
+        if (consumerProducerAgent.isStockOfConsumedProduct()) {
+            // Consuming product
+            consumerProducerAgent.removeOneConsumedProduct();
             consumerProducerAgent.resetSatisfaction();
 
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé.");
@@ -40,7 +40,7 @@ public class ConsumerBehaviour extends TickerBehaviour {
             // Si le stock est trop faible pour consommer, agir en conséquence
             // décider d'acheter auprès d'un producteur
             if (!consumerProducerAgent.isCurrentlyBuying()) {
-                consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent));
+                consumerProducerAgent.addBehaviour(new BuyConsumedProductBehaviour(consumerProducerAgent));
             }
             consumerProducerAgent.decreaseSatisfaction();
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " n'a pas consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());
