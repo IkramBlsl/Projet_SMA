@@ -10,6 +10,8 @@ import java.util.Random;
  */
 public class ConsumerBehaviour extends TickerBehaviour {
 
+    private boolean previouslySatisfied;
+
     /**
      * Constructor for the ConsumerBehaviour class.
      *
@@ -17,6 +19,7 @@ public class ConsumerBehaviour extends TickerBehaviour {
      */
     public ConsumerBehaviour(ConsumerProducerAgent a) {
         super(a, a.getConsumptionSpeed());
+        previouslySatisfied = false;
     }
 
     /**
@@ -30,22 +33,27 @@ public class ConsumerBehaviour extends TickerBehaviour {
         if (consumerProducerAgent.isStockOfConsumedMerchandise()) {
             // Consuming merchandise
             consumerProducerAgent.removeOneConsumedMerchandise();
-            consumerProducerAgent.setSatisfaction(1.0f);
+            consumerProducerAgent.resetSatisfaction();
 
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " a consommé.");
         } else {
             // Si le stock est trop faible pour consommer, agir en conséquence
             // décider d'acheter auprès d'un producteur
-            consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent));
+            if (!consumerProducerAgent.isCurrentlyBuying()) {
+                consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent));
+            }
             consumerProducerAgent.decreaseSatisfaction();
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " n'a pas consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());
         }
 
-        if (consumerProducerAgent.getMoney() > 10 && consumerProducerAgent.getSatisfaction() > 0.5) {
+        if (!previouslySatisfied && consumerProducerAgent.isSatisfied()) {
             Random random = new Random();
-            if (random.nextFloat(0, 1) < 0.1) {
+            if (random.nextFloat(0, 1) < 0.4) {
                 consumerProducerAgent.cloneAgent();
             }
+            previouslySatisfied = true;
+        } else if (previouslySatisfied && !consumerProducerAgent.isSatisfied()) {
+            previouslySatisfied = false;
         }
     }
 

@@ -32,9 +32,13 @@ public class SimulationAgent extends Agent {
         try {
             AgentController cp1 = cc.createNewAgent("cp1", ConsumerProducerAgent.class.getName(), new String[]{"1", "2"});
             AgentController cp2 = cc.createNewAgent("cp2", ConsumerProducerAgent.class.getName(), new String[]{"2", "1"});
+            AgentController cp3 = cc.createNewAgent("cp3", ConsumerProducerAgent.class.getName(), new String[]{"1", "2"});
+            AgentController cp4 = cc.createNewAgent("cp4", ConsumerProducerAgent.class.getName(), new String[]{"2", "1"});
 
             cp1.start();
             cp2.start();
+            cp3.start();
+            cp4.start();
         } catch (StaleProxyException e) {
             throw new RuntimeException(e);
         }

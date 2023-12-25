@@ -33,6 +33,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
     public void onStart() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
+        consumerProducerAgent.setCurrentlyBuying(true);
         // Send CFP to all producers
         this.nbExpectedPropositions = consumerProducerAgent.sendCFPToConsumedMerchandiseProducers();
     }
@@ -105,6 +106,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
 
                 if (buyQuantity == 0) {
                     consumerProducerAgent.sendREJECTToConsumedMerchandiseProducer(bestProposition.getSender());
+                    consumerProducerAgent.setCurrentlyBuying(false);
                 } else {
                     consumerProducerAgent.sendACCEPTToConsumedMerchandiseProducer(bestProposition.getSender(), buyQuantity);
                     consumerProducerAgent.addBehaviour(new AwaitConfirmBehaviour(consumerProducerAgent, bestProposition, buyQuantity));
@@ -143,6 +145,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                     consumerProducerAgent.buyConsumedMerchandises(buyQuantity, proposition.getPrice());
                 }
                 messageReceived = true;
+                consumerProducerAgent.setCurrentlyBuying(false);
             } else {
                 block();
             }

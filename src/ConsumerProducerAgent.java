@@ -9,6 +9,7 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.UUID;
 
@@ -33,12 +34,16 @@ public class ConsumerProducerAgent extends Agent {
     private int consumedMerchandiseStock = 0;
     private float money = 10;
     private float satisfaction = 1;
+    private boolean currentlyBuying = false;
+
+    private float globalSatisfaction = 0;
+    private int nbUpdatedGlobalSatisfaction = 0;
 
     protected void setup() {
         Random random = new Random();
-        productionSpeed = random.nextLong(2000, 7000);
-        consumptionSpeed = random.nextLong(2000, 7000);
-        priceVariationPeriod = random.nextLong(2000, 7000);
+        productionSpeed = random.nextLong(1000, 5000);
+        consumptionSpeed = random.nextLong(1000, 5000);
+        priceVariationPeriod = random.nextLong(1000, 5000);
 
         Object[] args = getArguments();
         try {
@@ -48,10 +53,8 @@ public class ConsumerProducerAgent extends Agent {
             this.consumedMerchandise = consumedMerchandise;
             this.producedMerchandise = producedMerchandise;
         } catch (Exception e) {
-            System.out.println("Terminating agent due to exception.");
-            System.err.println(e.getMessage());
+            System.out.println("Terminating agent due to exception. " + e.getMessage());
             doDelete(); // Terminate the agent.
-            // TODO : Dealing better with this catch block
             return;
         }
 
@@ -73,6 +76,7 @@ public class ConsumerProducerAgent extends Agent {
 
     @Override
     protected void takeDown() {
+        showGlobalSatisfaction();
         try {
             DFService.deregister(this);
         } catch (FIPAException e) {
@@ -83,7 +87,6 @@ public class ConsumerProducerAgent extends Agent {
     /**
      * Method to register the agent to the Directory Facilitator (DF).
      */
-
     private void registerToDF() {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
@@ -115,10 +118,25 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
+    private void updateGlobalSatisfaction() {
+        globalSatisfaction += satisfaction;
+        nbUpdatedGlobalSatisfaction++;
+    }
+
+    private void showGlobalSatisfaction() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        float meanSatisfaction = (globalSatisfaction / nbUpdatedGlobalSatisfaction) * 100;
+        System.out.println("Agent " + getName() + " mean satisfaction is " + decimalFormat.format(meanSatisfaction) + "%");
+    }
+
+    public boolean isSatisfied() {
+        return (money > 10 && satisfaction > 0.5);
+    }
+
     public void cloneAgent() {
         ContainerController cc = getContainerController();
         try {
-            AgentController cp = cc.createNewAgent("agent_" + UUID.randomUUID(), ConsumerProducerAgent.class.getName(), new String[]{consumedMerchandise.getValue(), producedMerchandise.getValue()});
+            AgentController cp = cc.createNewAgent(getLocalName() + "_" + UUID.randomUUID(), ConsumerProducerAgent.class.getName(), new String[]{consumedMerchandise.getValue(), producedMerchandise.getValue()});
 
             cp.start();
         } catch (StaleProxyException e) {
@@ -198,16 +216,12 @@ public class ConsumerProducerAgent extends Agent {
         if (satisfaction < 0) {
             satisfaction = 0;
         }
+        updateGlobalSatisfaction();
     }
 
-    public void setSatisfaction(float newSatisfaction) {
-        if (newSatisfaction > 1) {
-            satisfaction = 1; // Limiter la satisfaction à 1 (100%)
-        } else if (newSatisfaction < 0) {
-            satisfaction = 0; // Assurer que la satisfaction ne descend pas en dessous de 0
-        } else {
-            satisfaction = newSatisfaction; // Définir la satisfaction à la valeur spécifiée
-        }
+    public void resetSatisfaction() {
+        satisfaction = 1;
+        updateGlobalSatisfaction();
     }
 
     public void decreasePrice() {
@@ -255,6 +269,14 @@ public class ConsumerProducerAgent extends Agent {
 
     public long getPriceVariationPeriod() {
         return priceVariationPeriod;
+    }
+
+    public boolean isCurrentlyBuying() {
+        return currentlyBuying;
+    }
+
+    public void setCurrentlyBuying(boolean currentlyBuying) {
+        this.currentlyBuying = currentlyBuying;
     }
 
 }

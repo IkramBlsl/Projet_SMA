@@ -10,7 +10,7 @@ public class PriceVariationBehaviour extends TickerBehaviour {
     protected void onTick() {
         ConsumerProducerAgent consumerProducerAgent = (ConsumerProducerAgent) myAgent;
 
-        if (consumerProducerAgent.getMoney() > 10 && consumerProducerAgent.getSatisfaction() > 0.5) {
+        if (consumerProducerAgent.isSatisfied()) {
             consumerProducerAgent.increasePrice();
         } else {
             consumerProducerAgent.decreasePrice();
