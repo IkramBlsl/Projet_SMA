@@ -7,7 +7,7 @@ import jade.wrapper.StaleProxyException;
 public class SimulationAgent extends Agent {
 
     protected void setup() {
-        long simulationDuration = 30000;
+        long simulationDuration = 600000;
 
         Object[] args = getArguments();
         try {

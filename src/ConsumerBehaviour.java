@@ -1,5 +1,7 @@
 import jade.core.behaviours.TickerBehaviour;
 
+import java.util.Random;
+
 /**
  * Behavior class for the Consumer agent.
  * This behavior is cyclic, continuously checking the stock of the consumed merchandise.
@@ -35,8 +37,15 @@ public class ConsumerBehaviour extends TickerBehaviour {
             // Si le stock est trop faible pour consommer, agir en conséquence
             // décider d'acheter auprès d'un producteur
             consumerProducerAgent.addBehaviour(new BuyConsumedMerchandiseBehaviour(consumerProducerAgent));
-            consumerProducerAgent.decreaseSatisfaction(0.1f); // Réduire la satisfaction ( de 0.1 à changer )
+            consumerProducerAgent.decreaseSatisfaction();
             System.out.println("Agent " + consumerProducerAgent.getLocalName() + " n'a pas consommé. Satisfaction : " + consumerProducerAgent.getSatisfaction());
+        }
+
+        if (consumerProducerAgent.getMoney() > 10 && consumerProducerAgent.getSatisfaction() > 0.5) {
+            Random random = new Random();
+            if (random.nextFloat(0, 1) < 0.1) {
+                consumerProducerAgent.cloneAgent();
+            }
         }
     }
 

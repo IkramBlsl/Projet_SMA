@@ -5,6 +5,12 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
+
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Agent class responsible for managing the consumption and production of merchandise.
@@ -22,15 +28,17 @@ public class ConsumerProducerAgent extends Agent {
 
     private long consumptionSpeed;
     private long productionSpeed;
+    private long priceVariationPeriod;
 
     private int consumedMerchandiseStock = 0;
     private float money = 10;
     private float satisfaction = 1;
 
     protected void setup() {
-        // TODO : Handle production & consumption speed
-        productionSpeed = 3000;
-        consumptionSpeed = 3000;
+        Random random = new Random();
+        productionSpeed = random.nextLong(2000, 7000);
+        consumptionSpeed = random.nextLong(2000, 7000);
+        priceVariationPeriod = random.nextLong(2000, 7000);
 
         Object[] args = getArguments();
         try {
@@ -58,6 +66,9 @@ public class ConsumerProducerAgent extends Agent {
 
         // Selling Behaviour
         addBehaviour(new SellProducedMerchandiseBehaviour(this));
+
+        // Price variation Behaviour
+        addBehaviour(new PriceVariationBehaviour(this));
     }
 
     @Override
@@ -104,7 +115,16 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
-    private void cloneAgent() {}
+    public void cloneAgent() {
+        ContainerController cc = getContainerController();
+        try {
+            AgentController cp = cc.createNewAgent("agent_" + UUID.randomUUID(), ConsumerProducerAgent.class.getName(), new String[]{consumedMerchandise.getValue(), producedMerchandise.getValue()});
+
+            cp.start();
+        } catch (StaleProxyException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public int sendCFPToConsumedMerchandiseProducers() {
         AID[] agents = searchConsumedMerchandiseProducersInDF();
@@ -173,6 +193,34 @@ public class ConsumerProducerAgent extends Agent {
         }
     }
 
+    public void decreaseSatisfaction() {
+        satisfaction *= (float) Math.exp(-0.05);
+        if (satisfaction < 0) {
+            satisfaction = 0;
+        }
+    }
+
+    public void setSatisfaction(float newSatisfaction) {
+        if (newSatisfaction > 1) {
+            satisfaction = 1; // Limiter la satisfaction à 1 (100%)
+        } else if (newSatisfaction < 0) {
+            satisfaction = 0; // Assurer que la satisfaction ne descend pas en dessous de 0
+        } else {
+            satisfaction = newSatisfaction; // Définir la satisfaction à la valeur spécifiée
+        }
+    }
+
+    public void decreasePrice() {
+        producedMerchandisePrice *= (float) Math.exp(-0.05);
+        if (producedMerchandisePrice < 0) {
+            producedMerchandisePrice = 0;
+        }
+    }
+
+    public void increasePrice() {
+        producedMerchandisePrice *= (float) Math.exp(0.05);
+    }
+
     public Merchandise getConsumedMerchandise() {
         return consumedMerchandise;
     }
@@ -193,23 +241,6 @@ public class ConsumerProducerAgent extends Agent {
         return satisfaction;
     }
 
-    public void decreaseSatisfaction(float decreaseAmount) {
-        satisfaction -= decreaseAmount;
-        if (satisfaction < 0) {
-            satisfaction = 0; // la satisfaction ne descend pas en dessous de zéro
-        }
-    }
-
-    public void setSatisfaction(float newSatisfaction) {
-        if (newSatisfaction > 1.0f) {
-            satisfaction = 1.0f; // Limiter la satisfaction à 1 (100%)
-        } else if (newSatisfaction < 0.0f) {
-            satisfaction = 0.0f; // Assurer que la satisfaction ne descend pas en dessous de 0
-        } else {
-            satisfaction = newSatisfaction; // Définir la satisfaction à la valeur spécifiée
-        }
-    }
-
     public float getMoney() {
         return money;
     }
@@ -220,6 +251,10 @@ public class ConsumerProducerAgent extends Agent {
 
     public int getProducedMerchandiseStock() {
         return producedMerchandiseStock;
+    }
+
+    public long getPriceVariationPeriod() {
+        return priceVariationPeriod;
     }
 
 }
