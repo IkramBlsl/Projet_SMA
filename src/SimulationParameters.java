@@ -1,3 +1,6 @@
+/**
+ * This class represents the simulation parameters of the simulation.
+ */
 public class SimulationParameters {
 
     public static final long SIMULATION_DURATION = 120_000;
@@ -16,5 +19,7 @@ public class SimulationParameters {
 
     public static final float CPA_DECREASE_PRICE_FACTOR = (float) 0.1;
     public static final float CPA_INCREASE_PRICE_FACTOR = (float) 0.1;
+
+    public static final float CPA_CLONING_FACTOR = (float) 0.5;
 
 }
