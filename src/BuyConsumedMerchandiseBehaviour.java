@@ -106,6 +106,7 @@ public class BuyConsumedMerchandiseBehaviour extends SimpleBehaviour {
                 if (buyQuantity == 0) {
                     consumerProducerAgent.sendREJECTToConsumedMerchandiseProducer(bestProposition.getSender());
                 } else {
+                    consumerProducerAgent.sendACCEPTToConsumedMerchandiseProducer(bestProposition.getSender(), buyQuantity);
                     consumerProducerAgent.addBehaviour(new AwaitConfirmBehaviour(consumerProducerAgent, bestProposition, buyQuantity));
                 }
             } catch (NoSuchElementException e) {
