@@ -20,13 +20,13 @@ The Consumer Producer Agent System simulates an environment where agents consume
 ## Usage
 
 Setup:
-        Ensure JDK is installed and set up.
-        Download and install JADE from [JADE](https://jade.tilab.com/maven/com/tilab/jade/jade/4.5.0/jade-4.5.0.jar).
+    Ensure JDK is installed and set up.
+    Download and install JADE from [JADE](https://jade.tilab.com/maven/com/tilab/jade/jade/4.5.0/jade-4.5.0.jar).
 
 Execution:
-        Compile the Java files using javac command or preferred IDE.
-        Run the JADE platform with the main container.
-        Run the agents by starting the main agent classes.
+    Compile the Java files using javac command or preferred IDE.
+    Run the JADE platform with the main container.
+    Run the agents by starting the main agent classes.
 
 Interact:
         Observe the interactions between agents in the console output.
