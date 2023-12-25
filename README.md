@@ -14,23 +14,8 @@ The Consumer Producer Agent System simulates an environment where agents consume
 ## Requirements
 
     Java Development Kit (JDK)
-    JADE (Java Agent DEvelopment Framework)
+    JADE [Java Agent DEvelopment Framework](https://jade.tilab.com/maven/com/tilab/jade/jade/4.5.0/jade-4.5.0.jar)
 
-
-## Usage
-
-**Setup**:
-- Ensure JDK is installed and set up.
-- Download and install JADE from [here](https://jade.tilab.com/maven/com/tilab/jade/jade/4.5.0/jade-4.5.0.jar).
-
-**Execution**:
-- Compile the Java files using javac command or preferred IDE.
-- Run the JADE platform with the main container.
-- Run the agents by starting the main agent classes.
-
-**Interact**:
-- Observe the interactions between agents in the console output.
-- Agents will engage in buying, selling, producing, and consuming products.
 
 
 ## Documentation
